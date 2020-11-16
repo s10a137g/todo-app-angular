@@ -1,0 +1,24 @@
+@*
+ *
+ * to do sample project
+ *
+ *@
+@import persistence.persistence.onMySQL.TodoRepository._
+
+@(vv: model.ViewValueCommon, todos: Seq[EntityEmbeddedId])
+@common.Default(vv){
+  <table>
+    <tr>
+      <th>タイトル</th>
+      <th>本文</th>
+      <th>ステータス</th>
+    </tr>
+    @for(todo <- todos) {
+      <tr>
+        <td>@todo.v.title</td>
+        <td>@todo.v.body</td>
+        <td>@todo.v.state</td>
+      </tr> 
+    }
+  </table>
+}

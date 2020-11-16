@@ -20,8 +20,8 @@ case class TodoTable[P <: JdbcProfile]()(implicit val driver: P)
   // Definition of DataSourceName
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
   lazy val dsn = Map(
-    "master" -> DataSourceName("ixias.db.mysql://master/Todo"),
-    "slave"  -> DataSourceName("ixias.db.mysql://slave/Todo")
+    "master" -> DataSourceName("ixias.db.mysql://master/to_do"),
+    "slave"  -> DataSourceName("ixias.db.mysql://slave/to_do")
   )
 
   // Definition of Query
@@ -31,7 +31,7 @@ case class TodoTable[P <: JdbcProfile]()(implicit val driver: P)
 
   // Definition of Table
   //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  class Table(tag: Tag) extends BasicTable(tag, "Todo") {
+  class Table(tag: Tag) extends BasicTable(tag, "to_do") {
     import Todo._
     // Columns
     /* @1 */ def id        = column[Id]            ("id",         O.UInt64, O.PrimaryKey, O.AutoInc)
