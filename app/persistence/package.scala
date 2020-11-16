@@ -3,7 +3,8 @@
   * 
   */
 
-// package lib
+
+package persistence
 
 package object persistence {
 

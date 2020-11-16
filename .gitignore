@@ -12,3 +12,4 @@ docker/db/data/
 .bloop
 .bsp
 .project
+.DS_Store
