@@ -14,12 +14,13 @@
   @helper.form(action = controllers.todo.routes.ToDoController.insert()) {
      @* CSRFトークンの生成ヘルパーを呼び出している。これでいい感じにトークンが用意されます。 *@
     @helper.CSRF.formField
-    @helper.inputText(todoForm("title"),'_label -> "タイトル")
-    @helper.inputText(todoForm("body"),'_label -> "本文")
+    @helper.inputText(todoForm("title"),'_label -> "タイトル", 'size -> 40)
+    @helper.textarea(todoForm("body"), '_label -> "本文", 'rows -> 3, 'cols -> 50)
     @helper.select(
       todoForm("category"),
-      options = categoryList.map(i => (i.v.id.toString, i.v.name)),
-      '_label -> " カテゴリ")
+      options = categoryList.map(i => (i.v.id.get.toString, i.v.name)),
+      '_label -> " カテゴリ"
+      )
     <input type="submit" value="登録">
   }
 }

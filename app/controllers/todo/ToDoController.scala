@@ -26,7 +26,7 @@ import play.api.data.Forms._
 import play.api.i18n.I18nSupport
 
 // Todo追加フォーム
-case class TodoInsertFormData(title: String, body: String, category: Long)
+case class TodoInsertFormData(title: String, body: String, category: String)
 
 //  Todo更新フォーム
 case class TodoUpdateFormData(title: String, body: String, status: Int, category: Int)
@@ -50,7 +50,7 @@ class ToDoController @Inject()(val controllerComponents: ControllerComponents) e
     mapping(
       "title"  -> text, 
       "body"   -> text, 
-      "category" -> longNumber
+      "category" -> text
     )(TodoInsertFormData.apply)(TodoInsertFormData.unapply)
   )
 
@@ -81,7 +81,7 @@ class ToDoController @Inject()(val controllerComponents: ControllerComponents) e
       },
       // 正常時遷移
       (f: TodoInsertFormData) => {
-          TodoRepository.add(Todo(f.category, f.title,f.body, Todo.Status(1)))
+        TodoRepository.add(Todo(f.category.toLong, f.title,f.body, Todo.Status(0)))
         Redirect("/todos/list")
       }
     )
