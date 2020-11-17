@@ -9,7 +9,7 @@ package controllers.todo
 import javax.inject._
 import play.api.mvc._
 
-import persistence.persistence.onMySQL.TodoRepository
+import persistence.persistence.onMySQL.{TodoRepository, CategoryRepository}
 
 import model.ViewValueHome
 import model.todo.Todo
@@ -25,8 +25,11 @@ import play.api.data.Forms._
 
 import play.api.i18n.I18nSupport
 
-// TODO追加フォーム
-case class TodoFormData(title: String, body: String, status: Int, category: Int)
+// Todo追加フォーム
+case class TodoInsertFormData(title: String, body: String, category: Long)
+
+//  Todo更新フォーム
+case class TodoUpdateFormData(title: String, body: String, status: Int, category: Int)
 
 @Singleton
 class ToDoController @Inject()(val controllerComponents: ControllerComponents) extends BaseController with I18nSupport {
@@ -43,25 +46,45 @@ class ToDoController @Inject()(val controllerComponents: ControllerComponents) e
     Ok(views.html.todo.list(vv, todoList))
   }
 
+  val todoForm = Form(
+    mapping(
+      "title"  -> text, 
+      "body"   -> text, 
+      "category" -> longNumber
+    )(TodoInsertFormData.apply)(TodoInsertFormData.unapply)
+  )
+
   def displayInsert() = Action { implicit req =>
-    val todoForm = Form(
-      mapping(
-          "title"  -> text, 
-          "body"   -> text, 
-          "status" -> number, 
-          "category" -> number
-        )(TodoFormData.apply)(TodoFormData.unapply)
-      )
     val vv = ViewValueHome(
       title  = "Todo追加画面",
       cssSrc = Seq("main.css"),
       jsSrc  = Seq("main.js")
     )
-
-    Ok(views.html.todo.insert(vv, todoForm))
+    val categoryList  = Await.result(CategoryRepository.getAll(), Duration.Inf)
+    println(categoryList) 
+    Ok(views.html.todo.insert(vv, todoForm, categoryList))
   }
     
   def insert() = Action { implicit req =>
-    NoContent
+    val vv = ViewValueHome(
+      title  = "Todo追加画面",
+      cssSrc = Seq("main.css"),
+      jsSrc  = Seq("main.js")
+    )
+    
+    //Formバリデーションエラー判定
+    todoForm.bindFromRequest().fold(
+      // エラー時遷移
+      (formWithErrors: Form[TodoInsertFormData]) => {
+        val categoryList  = Await.result(CategoryRepository.getAll(), Duration.Inf)
+        BadRequest(views.html.todo.insert(vv, formWithErrors, categoryList))
+      },
+      // 正常時遷移
+      (f: TodoInsertFormData) => {
+          TodoRepository.add(Todo(f.category, f.title,f.body, Todo.Status(1)))
+        Redirect("/todos/list")
+      }
+    )
   }
+  
 }
