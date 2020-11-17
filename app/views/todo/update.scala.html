@@ -1,0 +1,47 @@
+@*
+ *
+ * to do sample project
+ *
+ *@
+@import controllers.todo.TodoUpdateFormData
+@import persistence.persistence.onMySQL.{CategoryRepository, TodoRepository}
+@import persistence.persistence.onMySQL.CategoryRepository._
+@import persistence.persistence.onMySQL.TodoRepository._
+@import helper._
+@import model.todo.Todo.Status
+
+@(vv: model.ViewValueCommon, todoForm: Form[TodoUpdateFormData], categoryList: Seq[CategoryRepository.EntityEmbeddedId], todo: TodoRepository.EntityEmbeddedId)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+@common.Default(vv){
+  @helper.form(action = controllers.todo.routes.ToDoController.update()) {
+    @helper.CSRF.formField
+    @helper.input(todoForm("title")) { (id, name, value, args) =>
+      <input type="text" name="@name" id="@id" value="@todo.v.title" @toHtmlArgs(args)>
+    } 
+    @helper.input(todoForm("body")) { (id, name, value, args) =>
+      <textarea name="@name" id="@id" @toHtmlArgs(args), rows="3", cols="50">@todo.v.body</textarea>
+    } 
+    <dl class="" id="Status_field">
+      <dt><label for="status">ステータス</label></dt>
+      <dd>
+        <select id="status" name="status">
+        @for(value <- Status.values) {
+        <option value="@value.code" @if(value.code == todo.v.state.code){ selected }>@value.name</option>
+        }
+        </select>
+      </dd>
+    </dl>
+    <dl class="" id="category_field">
+      <dt><label for="category">category</label></dt>
+      <dd>
+        <select id="category" name="category">
+        @for(category <- categoryList) {
+        <option value="@category.v.id" @if(category.v.id == todo.v.id){ selected }>@category.v.name</option>
+        }
+        </select>
+      </dd>
+    </dl>
+    <input type="hidden" value="@todo.v.id.get.toString" name="id">
+    <input type="submit" value="更新">
+  }
+}

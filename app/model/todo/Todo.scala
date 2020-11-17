@@ -53,4 +53,17 @@ object Todo {
       )
     )
   }
+
+  // EmbeddedIdインスタンスを生成するメソッド 
+  def build(id: Id, categoryId: Long, title: String, body: String, state: Status): EmbeddedId = {
+    new Entity.EmbeddedId(
+      new Todo(
+        id    = Some(id),
+        categoryId  = categoryId,
+        title = title,
+        body   = body,
+        state = state
+      )
+    )
+  }
 }

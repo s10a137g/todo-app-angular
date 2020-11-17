@@ -7,7 +7,10 @@
 GET     /                             controllers.HomeController.index
 GET     /todos/list                         controllers.todo.ToDoController.list
 GET     /todos/insert                       controllers.todo.ToDoController.displayInsert
+GET     /todos/$id<[0-9]>/update              controllers.todo.ToDoController.displayUpdate(id: Long)
+
 POST     /todos/insert                      controllers.todo.ToDoController.insert
+POST     /todos/update                      controllers.todo.ToDoController.update
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
