@@ -1,0 +1,21 @@
+@*
+ *
+ * to do sample project
+ *
+ *@
+@import controllers.todo.TodoFormData
+@import helper._
+
+
+@(vv: model.ViewValueCommon, todoForm: Form[TodoFormData])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+@common.Default(vv){
+  @helper.form(action = controllers.todo.routes.ToDoController.insert()) {
+    @helper.inputText(todoForm("title"))
+    @helper.inputText(todoForm("body"))
+    @helper.inputText(todoForm("status"))
+    @helper.inputText(todoForm("category"))
+    <input type="submit" value="登録">
+  }
+}
+
