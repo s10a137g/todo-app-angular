@@ -14,10 +14,10 @@
       <th>ステータス</th>
     </tr>
     @for(todo <- todos) {
-      <tr>
+      <tr class="main__list--@todo.v.categoryId">
         <td>@todo.v.title</td>
         <td>@todo.v.body</td>
-        <td>@todo.v.state</td>
+        <td>@todo.v.state.name</td>
       </tr> 
     }
   </table>

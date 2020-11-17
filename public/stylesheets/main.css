@@ -25,6 +25,18 @@ body {
   font-weight:       bold;
 }
 
+.main__list--1 {
+  background-color: #FF7D7D;
+}
+
+.main__list--2 {
+  background-color: #FFD580;
+}
+
+.main__list--3 {
+  background-color: #B3E284;
+}
+
 .main {
   width:      980px;
   margin:     100px auto;

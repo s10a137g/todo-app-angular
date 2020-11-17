@@ -24,19 +24,14 @@ import scala.concurrent.duration._
 class ToDoController @Inject()(val controllerComponents: ControllerComponents) extends BaseController {
 
   def list() = Action { implicit req =>
+    
     val vv = ViewValueHome(
-      title  = "List",
+      title  = "Todo一覧表示画面",
       cssSrc = Seq("main.css"),
       jsSrc  = Seq("main.js")
     )
 
-    val id: Todo.Id = Todo.Id(1L)
-   
-    val todoList = TodoRepository.getAll()
-    
-    val result = Await.result(todoList, Duration.Inf)
-    println(result)
-
-    Ok(views.html.todo.list(vv, result))
+    val todoList  = Await.result(TodoRepository.getAll(), Duration.Inf)
+    Ok(views.html.todo.list(vv, todoList))
   }
 }
