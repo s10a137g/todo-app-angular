@@ -9,6 +9,7 @@
 
 @(vv: model.ViewValueCommon, todoList: Seq[TodoRepository.EntityEmbeddedId], categoryList: Seq[CategoryRepository.EntityEmbeddedId])
 @common.Default(vv){
+  <a href="@controllers.todo.routes.TodoController.displayInsert">Todo追加</a>
 <table>
   <tr>
     <th>タイトル</th>

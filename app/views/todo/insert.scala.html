@@ -12,6 +12,7 @@
 RequestHeader, messagesProvider: MessagesProvider)
 
 @common.Default(vv){
+
   @helper.form(action = controllers.todo.routes.TodoController.insert()) {
     @* CSRFトークンの生成ヘルパーを呼び出している。これでいい感じにトークンが用意されます。 *@
     @helper.CSRF.formField
