@@ -18,7 +18,7 @@ RequestHeader, messagesProvider: MessagesProvider)
     @helper.inputText(todoForm("title"),'_label -> "タイトル", 'size -> 40)
     @helper.textarea(todoForm("body"), '_label -> "本文", 'rows -> 3, 'cols -> 50)
     @helper.select(
-      todoForm("category"),
+      todoForm("categoryId"),
       options = categoryList.map(i => (i.v.id.get.toString, i.v.name)),
       '_label -> " カテゴリ"
     )

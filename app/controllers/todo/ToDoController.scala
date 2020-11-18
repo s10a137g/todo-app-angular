@@ -24,70 +24,69 @@ import play.api.data.Forms._
 import play.api.i18n.I18nSupport
 
 // Todo追加フォーム
-case class TodoInsertFormData(title: String, body: String, category: String)
+case class TodoInsertFormData(title: String, body: String, categoryId: Long)
 
 //  Todo更新フォーム
 case class TodoUpdateFormData(
-  id:       String,
-  title:    String,
-  body:     String,
-  status:   String,
-  category: String
+  id:         Long,
+  title:      String,
+  body:       String,
+  status:     Short,
+  categoryId: Long
 )
 
 @Singleton
 class TodoController @Inject() (val controllerComponents: ControllerComponents)
   extends BaseController
      with I18nSupport {
-  val alphaNumAllowedLineBreak    = """[A-Za-z1-9]"""
-  val alphaNumDisallowedLineBreak = """[A-Za-z1-9]"""
 
   val todoInsertForm = Form(
     mapping(
-      "title"    -> text,
-      "body"     -> text,
-      "category" -> text
+      "title"      -> nonEmptyText,
+      "body"       -> nonEmptyText,
+      "categoryId" -> longNumber
     )(TodoInsertFormData.apply)(TodoInsertFormData.unapply)
   )
 
   val todoUpdateForm = Form(
     mapping(
-      "id"       -> text,
-      "title"    -> text,
-      "body"     -> text,
-      "status"   -> text,
-      "category" -> text
+      "id"         -> longNumber,
+      "title"      -> nonEmptyText,
+      "body"       -> nonEmptyText,
+      "status"     -> shortNumber,
+      "categoryId" -> longNumber
     )(TodoUpdateFormData.apply)(TodoUpdateFormData.unapply)
   )
 
-  def list() = Action { implicit req =>
-    val vv = ViewValueHome(
-      title  = "Todo一覧表示画面",
-      cssSrc = Seq("main.css"),
-      jsSrc  = Seq("main.js")
-    )
+  val defaultVv = ViewValueHome(
+    title  = "Todo一覧表示画面",
+    cssSrc = Seq("main.css"),
+    jsSrc  = Seq("main.js")
+  )
 
-    val todoList = Await.result(TodoRepository.getAll(), Duration.Inf)
-    Ok(views.html.todo.list(vv, todoList))
+  def list() = Action { implicit req =>
+    val todoList     = Await.result(TodoRepository.getAll(), Duration.Inf)
+    val categoryList = Await.result(CategoryRepository.getAll(), Duration.Inf)
+
+    Ok(
+      views.html.todo
+        .list(defaultVv.copy(title = "TODO一覧表示画面"), todoList, categoryList)
+    )
   }
 
   def displayInsert() = Action { implicit req =>
-    val vv           = ViewValueHome(
-      title  = "Todo追加画面",
-      cssSrc = Seq("main.css"),
-      jsSrc  = Seq("main.js")
-    )
     val categoryList = Await.result(CategoryRepository.getAll(), Duration.Inf)
-    Ok(views.html.todo.insert(vv, todoInsertForm, categoryList))
+
+    Ok(
+      views.html.todo.insert(
+        defaultVv.copy(title = "TODO追加画面"),
+        todoInsertForm,
+        categoryList
+      )
+    )
   }
 
   def insert() = Action { implicit req =>
-    val vv = ViewValueHome(
-      title  = "Todo追加画面",
-      cssSrc = Seq("main.css"),
-      jsSrc  = Seq("main.js")
-    )
-
     //Formバリデーションエラー判定
     todoInsertForm
       .bindFromRequest().fold(
@@ -95,64 +94,73 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
         (formWithErrors: Form[TodoInsertFormData]) => {
           val categoryList =
             Await.result(CategoryRepository.getAll(), Duration.Inf)
-          BadRequest(views.html.todo.insert(vv, formWithErrors, categoryList))
+
+          BadRequest(
+            views.html.todo.insert(
+              defaultVv.copy(title = "TODO追加画面"),
+              formWithErrors,
+              categoryList
+            )
+          )
         },
         // 正常時遷移
         (f: TodoInsertFormData) => {
           var result = TodoRepository
-            .add(Todo(f.category.toLong, f.title, f.body, Todo.Status(0)))
+            .add(Todo(f.categoryId, f.title, f.body, Todo.Status(0)))
           Await.ready(result, Duration.Inf)
+
           Redirect("/todos/list")
         }
       )
   }
 
   def displayUpdate(id: Long) = Action { implicit req =>
-    val vv           = ViewValueHome(
-      title  = "Todo更新画面",
-      cssSrc = Seq("main.css"),
-      jsSrc  = Seq("main.js")
-    )
-    val todo         = Await.result(TodoRepository.get(Todo.Id(id)), Duration.Inf).get
+    val updateTodo         = Await.result(TodoRepository.get(Todo.Id(id)), Duration.Inf).get
     val categoryList = Await.result(CategoryRepository.getAll(), Duration.Inf)
-    Ok(views.html.todo.update(vv, todoUpdateForm, categoryList, todo))
+    val inputMap     = Map(
+      "id"         -> updateTodo.v.id.get.toString,
+      "categoryId" -> updateTodo.v.categoryId.toString,
+      "title"      -> updateTodo.v.title,
+      "body"       -> updateTodo.v.body,
+      "status"     -> updateTodo.v.state.code.toString
+    )
+
+    Ok(
+      views.html.todo.update(
+        defaultVv.copy(title = "TODO更新画面"),
+        todoUpdateForm.bind(inputMap),
+        categoryList
+      )
+    )
   }
 
   def update() = Action { implicit req =>
     todoUpdateForm
       .bindFromRequest().fold(
         (formWithErrors: Form[TodoUpdateFormData]) => {
-          val vv = ViewValueHome(
-            title  = "Todo更新画面",
-            cssSrc = Seq("main.css"),
-            jsSrc  = Seq("main.js")
-          )
-
           val categoryList =
             Await.result(CategoryRepository.getAll(), Duration.Inf)
-          val todo         =
-            Await.result(TodoRepository.get(Todo.Id(1)), Duration.Inf).get
 
           BadRequest(
-            views.html.todo.update(vv, formWithErrors, categoryList, todo)
+            views.html.todo.update(
+              defaultVv.copy(title = "TODO更新画面"),
+              formWithErrors,
+              categoryList
+            )
           )
         },
         (data: TodoUpdateFormData) => {
           val result = TodoRepository.update(
             Todo.build(
-              Todo.Id(data.id.toLong),
-              data.category.toLong,
+              Todo.Id(data.id),
+              data.categoryId,
               data.title,
               data.body,
-              Todo.Status(data.status.toShort)
+              Todo.Status(data.status)
             )
           )
-          Await.ready(result, Duration.Inf)
 
-          val categoryList =
-            Await.result(CategoryRepository.getAll(), Duration.Inf)
-          val todo         =
-            Await.result(TodoRepository.get(Todo.Id(1)), Duration.Inf).get
+          Await.ready(result, Duration.Inf)
           Redirect("/todos/list")
         }
       )
