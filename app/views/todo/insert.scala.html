@@ -1,18 +1,19 @@
 @*
- *
- * to do sample project
- *
- *@
+*
+* to do sample project
+*
+*@
 @import controllers.todo.TodoInsertFormData
 @import persistence.persistence.onMySQL.CategoryRepository._
 @import helper._
 
 
-@(vv: model.ViewValueCommon, todoForm: Form[TodoInsertFormData], categoryList: Seq[EntityEmbeddedId])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@(vv: model.ViewValueCommon, todoForm: Form[TodoInsertFormData], categoryList: Seq[EntityEmbeddedId])(implicit request:
+RequestHeader, messagesProvider: MessagesProvider)
 
 @common.Default(vv){
   @helper.form(action = controllers.todo.routes.TodoController.insert()) {
-     @* CSRFトークンの生成ヘルパーを呼び出している。これでいい感じにトークンが用意されます。 *@
+    @* CSRFトークンの生成ヘルパーを呼び出している。これでいい感じにトークンが用意されます。 *@
     @helper.CSRF.formField
     @helper.inputText(todoForm("title"),'_label -> "タイトル", 'size -> 40)
     @helper.textarea(todoForm("body"), '_label -> "本文", 'rows -> 3, 'cols -> 50)
@@ -20,8 +21,7 @@
       todoForm("category"),
       options = categoryList.map(i => (i.v.id.get.toString, i.v.name)),
       '_label -> " カテゴリ"
-      )
+    )
     <input type="submit" value="登録">
   }
 }
-

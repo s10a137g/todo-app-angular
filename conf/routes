@@ -7,7 +7,8 @@
 GET     /                             controllers.HomeController.index
 GET     /todos/list                         controllers.todo.TodoController.list
 GET     /todos/insert                       controllers.todo.TodoController.displayInsert
-GET     /todos/$id<[0-9]>/update              controllers.todo.TodoController.displayUpdate(id: Long)
+GET     /todos/$id<[0-9]+>/update              controllers.todo.TodoController.displayUpdate(id: Long)
+GET     /todos/$id<[0-9]+>/delete              controllers.todo.TodoController.delete(id: Long)
 
 POST     /todos/insert                      controllers.todo.TodoController.insert
 POST     /todos/update                      controllers.todo.TodoController.update

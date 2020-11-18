@@ -1,26 +1,27 @@
 @*
- *
- * to do sample project
- *
- *@
+*
+* to do sample project
+*
+*@
 @import persistence.persistence.onMySQL.TodoRepository._
 
 @(vv: model.ViewValueCommon, todos: Seq[EntityEmbeddedId])
 @common.Default(vv){
-  <table>
-    <tr>
-      <th>タイトル</th>
-      <th>本文</th>
-      <th>ステータス</th>
-      <th>更新</th>
+<table>
+  <tr>
+    <th>タイトル</th>
+    <th>本文</th>
+    <th>ステータス</th>
+    <th>更新</th>
+    <th>削除</th>
+  </tr>
+  @for(todo <- todos) { <tr class="main__list--@todo.v.categoryId">
+    <td>@todo.v.title</td>
+    <td>@todo.v.body</td>
+    <td>@todo.v.state.name</td>
+    <td><a href="@controllers.todo.routes.TodoController.displayUpdate(todo.v.id.get)">更新</td>
+    <td><a href="@controllers.todo.routes.TodoController.delete(todo.v.id.get)">削除</td>
     </tr>
-    @for(todo <- todos) {
-      <tr class="main__list--@todo.v.categoryId">
-        <td>@todo.v.title</td>
-        <td>@todo.v.body</td>
-        <td>@todo.v.state.name</td>
-        <td><a href="@controllers.todo.routes.TodoController.displayUpdate(todo.v.id.get)">更新</td>
-      </tr> 
     }
-  </table>
+</table>
 }
