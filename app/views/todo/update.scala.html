@@ -13,7 +13,7 @@
 @(vv: model.ViewValueCommon, todoForm: Form[TodoUpdateFormData], categoryList: Seq[CategoryRepository.EntityEmbeddedId], todo: TodoRepository.EntityEmbeddedId)(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @common.Default(vv){
-  @helper.form(action = controllers.todo.routes.ToDoController.update()) {
+  @helper.form(action = controllers.todo.routes.TodoController.update()) {
     @helper.CSRF.formField
     @helper.input(todoForm("title")) { (id, name, value, args) =>
       <input type="text" name="@name" id="@id" value="@todo.v.title" @toHtmlArgs(args)>

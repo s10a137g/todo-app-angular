@@ -11,7 +11,7 @@
 @(vv: model.ViewValueCommon, todoForm: Form[TodoInsertFormData], categoryList: Seq[EntityEmbeddedId])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @common.Default(vv){
-  @helper.form(action = controllers.todo.routes.ToDoController.insert()) {
+  @helper.form(action = controllers.todo.routes.TodoController.insert()) {
      @* CSRFトークンの生成ヘルパーを呼び出している。これでいい感じにトークンが用意されます。 *@
     @helper.CSRF.formField
     @helper.inputText(todoForm("title"),'_label -> "タイトル", 'size -> 40)

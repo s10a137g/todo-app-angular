@@ -32,7 +32,7 @@ case class TodoInsertFormData(title: String, body: String, category: String)
 case class TodoUpdateFormData(id: String, title: String, body: String, status: String, category: String)
 
 @Singleton
-class ToDoController @Inject()(val controllerComponents: ControllerComponents) extends BaseController with I18nSupport {
+class TodoController @Inject()(val controllerComponents: ControllerComponents) extends BaseController with I18nSupport {
   val alphaNumAllowedLineBreak = """[A-Za-z1-9]"""
   val alphaNumDisallowedLineBreak = """[A-Za-z1-9]"""
   
@@ -94,7 +94,8 @@ class ToDoController @Inject()(val controllerComponents: ControllerComponents) e
       },
       // 正常時遷移
       (f: TodoInsertFormData) => {
-        TodoRepository.add(Todo(f.category.toLong, f.title,f.body, Todo.Status(0)))
+        var result = TodoRepository.add(Todo(f.category.toLong, f.title,f.body, Todo.Status(0)))
+        Await.ready(result, Duration.Inf)
         Redirect("/todos/list")
       }
     )
@@ -127,9 +128,10 @@ class ToDoController @Inject()(val controllerComponents: ControllerComponents) e
 
         BadRequest(views.html.todo.update(vv, formWithErrors, categoryList, todo))
       },
+
       (data: TodoUpdateFormData) => {
         println(data)
-        TodoRepository.update(
+        val result = TodoRepository.update(
           Todo.build(
             Todo.Id(data.id.toLong),
             data.category.toLong,
@@ -138,7 +140,15 @@ class ToDoController @Inject()(val controllerComponents: ControllerComponents) e
             Todo.Status(data.status.toShort)
           )
         )
+        Await.ready(result, Duration.Inf)
+
+        val categoryList  = Await.result(CategoryRepository.getAll(), Duration.Inf)
+        val todo = Await.result(TodoRepository.get(Todo.Id(1)), Duration.Inf).get
         Redirect("/todos/list")
+        // result.value.get match {
+        //   case Success(v) => Redirect("/todos/list")
+        //   case Failure => BadRequest(views.html.todo.update(vv, formWithErrors, categoryList, todo))
+        // }
       }) 
   }
 }
