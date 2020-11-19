@@ -23,8 +23,8 @@
       <td>@category.v.name</td>
       <td>@category.v.slug</td>
       <td>@category.v.color.name</td>
-      <td><a href="">更新</td>
-      <td><a href="">削除</td>
+      <td><a href="@controllers.category.routes.CategoryController.displayUpdate(category.v.id.get)">更新</td>
+      <td><a href="@controllers.category.routes.CategoryController.delete(category.v.id.get)">削除</td>
     </tr>
   }
 </table>

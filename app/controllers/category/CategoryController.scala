@@ -43,7 +43,7 @@ class CategoryController @Inject() (
 ) extends BaseController
      with I18nSupport {
 
-  val numericAlphaChar = """[A-Za-z0-9]""".r
+  val numericAlphaChar = """^[0-9a-zA-Z]*$""".r
 
   val slugCheckConstraint: Constraint[String] =
     Constraint("constraints.slugcheck")({ plainText =>
@@ -93,7 +93,7 @@ class CategoryController @Inject() (
           views.html.category
             .list(defaultVv.copy(title = "カテゴリ一覧表示画面"), categoryList)
         )
-      case _                        => BadRequest(views.html.error.error(defaultVv))
+      case _                                           => BadRequest(views.html.error.error(defaultVv))
     }
   }
 
@@ -132,5 +132,67 @@ class CategoryController @Inject() (
           }
         }
       )
+  }
+
+  def displayUpdate(id: Long) = Action { implicit req =>
+    val updateCategory =
+      Await.result(CategoryRepository.get(Category.Id(id)), Duration.Inf).get
+    val inputMap       = Map(
+      "id"    -> updateCategory.v.id.get.toString,
+      "name"  -> updateCategory.v.name,
+      "slug"  -> updateCategory.v.slug,
+      "color" -> updateCategory.v.color.code.toString
+    )
+
+    Ok(
+      views.html.category.update(
+        defaultVv.copy(title = "カテゴリ更新画面"),
+        categoryUpdateForm.bind(inputMap)
+      )
+    )
+  }
+
+  def update() = Action.async { implicit req =>
+    categoryUpdateForm
+      .bindFromRequest().fold(
+        (formWithErrors: Form[CategoryUpdateFormData]) => {
+          val categoryList =
+            Await.result(CategoryRepository.getAll(), Duration.Inf)
+
+          Future {
+            BadRequest(
+              views.html.category.update(
+                defaultVv.copy(title = "カテゴリ更新画面"),
+                formWithErrors
+              )
+            )
+          }
+        },
+        (data: CategoryUpdateFormData) => {
+          println(data)
+          val category = Category.build(
+            Category.Id(data.id),
+            data.name,
+            data.slug,
+            Category.Color(data.color)
+          )
+
+          for {
+            result <- CategoryRepository.update(category)
+          } yield result match {
+            case Some(v) => Redirect("/categories/list")
+            case _       => BadRequest(views.html.error.error(defaultVv))
+          }
+        }
+      )
+  }
+
+  def delete(id: Long) = Action.async { implicit req =>
+    for {
+      result <- CategoryRepository.remove(Category.Id(id))
+    } yield result match {
+      case Some(v) => Redirect("/categories/list")
+      case _       => BadRequest(views.html.error.error(defaultVv))
+    }
   }
 }

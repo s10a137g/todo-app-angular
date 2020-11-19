@@ -178,11 +178,12 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
   }
 
   def delete(id: Long) = Action.async { implicit req =>
-    val result = TodoRepository.remove(Todo.Id(id))
-
-    Await.ready(result, Duration.Inf)
-    Future { Redirect("/todos/list") }
-
+    for {
+      result <- TodoRepository.remove(Todo.Id(id))
+    } yield result match {
+      case Some(v) => Redirect("/todos/list")
+      case _       => BadRequest(views.html.error.error(defaultVv))
+    }
   }
 
 }

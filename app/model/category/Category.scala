@@ -63,4 +63,19 @@ object Category {
       )
     )
   }
+  def build(
+    id: Id,
+    name:  String,
+    slug:  String,
+    color: Color
+  ): EmbeddedId = {
+    new Entity.EmbeddedId(
+      new Category(
+        id    = Some(id),
+        name  = name,
+        slug  = slug,
+        color = color
+      )
+    )
+  }
 }

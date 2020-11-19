@@ -12,12 +12,13 @@ GET     /todos/$id<[0-9]+>/delete     controllers.todo.TodoController.delete(id:
 
 GET     /categories/list               controllers.category.CategoryController.list
 GET     /categories/insert             controllers.category.CategoryController.displayInsert
-# GET     /todos/$id<[0-9]+>/update     controllers.category.CategoryController.displayUpdate(id: Long)
-GET     /todos/$id<[0-9]+>/delete     controllers.category.CategoryController.delete(id: Long)
+GET     /categories/$id<[0-9]+>/update     controllers.category.CategoryController.displayUpdate(id: Long)
+GET     /categories/$id<[0-9]+>/delete     controllers.category.CategoryController.delete(id: Long)
 
 POST     /todos/insert                controllers.todo.TodoController.insert
 POST     /todos/update                controllers.todo.TodoController.update
 
 POST     /category/insert             controllers.category.CategoryController.insert
+POST     /category/update             controllers.category.CategoryController.update
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

@@ -8,7 +8,6 @@ import ixias.model._
 import ixias.util.EnumStatus
 
 import java.time.LocalDateTime
-
 // ユーザーを表すモデル
 //~~~~~~~~~~~~~~~~~~~~
 import Todo._

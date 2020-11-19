@@ -1,0 +1,29 @@
+@*
+*
+* to do sample project
+*
+*@
+@import controllers.category.CategoryUpdateFormData
+@import persistence.persistence.onMySQL.CategoryRepository._
+@import helper._
+@import model.category.Category.Color
+
+@(vv: model.ViewValueCommon, categoryForm: Form[CategoryUpdateFormData])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+@common.Default(vv){
+
+  @helper.form(action = controllers.category.routes.CategoryController.update()) {
+    @helper.CSRF.formField
+    @helper.inputText(categoryForm("name"),'_label -> "カテゴリ名", 'size -> 20)
+    @helper.inputText(categoryForm("slug"), '_label -> "スラッグ", 'size -> 20)
+    @helper.select(
+      categoryForm("color"),
+      options = Color.values.map(i => (i.code.toString, i.name)),
+      '_label -> " 色"
+    )
+    
+    <input type="hidden" value="@categoryForm.data("id")" name="id">
+    <input type="submit" value="更新">
+  }
+}
+
