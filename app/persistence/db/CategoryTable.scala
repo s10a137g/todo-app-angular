@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 import slick.jdbc.JdbcProfile
 import ixias.persistence.model.Table
 
-import model.todo.Category
+import model.category.Category
 
 // CategoryTable: Categoryテーブルへのマッピングを行う
 //~~~~~~~~~~~~~~
@@ -40,7 +40,7 @@ case class CategoryTable[P <: JdbcProfile]()(implicit val driver: P)
     /* @4 */
     def slug      = column[String]("slug", O.Utf8Char255)
     /* @5 */
-    def color     = column[Short]("color", O.UInt8)
+    def color     = column[Color]("color", O.UInt8)
     /* @6 */
     def updatedAt = column[LocalDateTime]("updated_at", O.TsCurrent)
     /* @7 */
@@ -50,7 +50,7 @@ case class CategoryTable[P <: JdbcProfile]()(implicit val driver: P)
       Option[Id],
       String,
       String,
-      Short,
+      Color,
       LocalDateTime,
       LocalDateTime
     )

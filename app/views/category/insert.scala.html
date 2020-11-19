@@ -1,0 +1,29 @@
+@*
+*
+* to do sample project
+*
+*@
+@import controllers.category.CategoryInsertFormData
+@import persistence.persistence.onMySQL.CategoryRepository._
+@import helper._
+@import model.category.Category.Color
+
+@(vv: model.ViewValueCommon, categoryForm: Form[CategoryInsertFormData])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+
+@common.Default(vv){
+
+  @helper.form(action = controllers.category.routes.CategoryController.insert()) {
+    @* CSRFトークンの生成ヘルパーを呼び出している。これでいい感じにトークンが用意されます。 *@
+    @helper.CSRF.formField
+    @helper.inputText(categoryForm("name"),'_label -> "カテゴリ名", 'size -> 20)
+    @helper.inputText(categoryForm("slug"), '_label -> "スラッグ", 'size -> 20)
+    @helper.select(
+      categoryForm("color"),
+      options = Color.values.map(i => (i.code.toString, i.name)),
+      '_label -> " 色"
+    )
+    
+    <input type="submit" value="登録">
+  }
+}
+

@@ -55,3 +55,11 @@ body {
 .info {
   display: none;
 }
+
+td, th {
+  padding: 5px 10px;
+}
+
+th {
+  background-color: #D3D3D3
+}

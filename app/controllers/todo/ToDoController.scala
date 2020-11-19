@@ -95,21 +95,25 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
           val categoryList =
             Await.result(CategoryRepository.getAll(), Duration.Inf)
 
-          Future{BadRequest(
-            views.html.todo.insert(
-              defaultVv.copy(title = "TODO追加画面"),
-              formWithErrors,
-              categoryList
+          Future {
+            BadRequest(
+              views.html.todo.insert(
+                defaultVv.copy(title = "TODO追加画面"),
+                formWithErrors,
+                categoryList
+              )
             )
-          )}
+          }
         },
         // 正常時遷移
         (f: TodoInsertFormData) => {
           for {
-            result <- TodoRepository.add(Todo(f.categoryId, f.title, f.body, Todo.Status(0)))
+            result <- TodoRepository.add(
+              Todo(f.categoryId, f.title, f.body, Todo.Status(0))
+            )
           } yield result match {
             case v: Todo.Id => Redirect("/todos/list")
-            case _       => BadRequest(views.html.error.error(defaultVv))
+            case _          => BadRequest(views.html.error.error(defaultVv))
           }
         }
       )
@@ -154,7 +158,7 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
           }
         },
         (data: TodoUpdateFormData) => {
-        
+
           val todo = Todo.build(
             Todo.Id(data.id),
             data.categoryId,
@@ -177,7 +181,7 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
     val result = TodoRepository.remove(Todo.Id(id))
 
     Await.ready(result, Duration.Inf)
-    Future{Redirect("/todos/list")}
+    Future { Redirect("/todos/list") }
 
   }
 

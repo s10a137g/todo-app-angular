@@ -2,7 +2,7 @@ package persistence
 
 import scala.concurrent.Future
 import ixias.persistence.SlickRepository
-import model.todo.Category
+import model.category.Category
 import slick.jdbc.JdbcProfile
 import db.CategoryTable
 
