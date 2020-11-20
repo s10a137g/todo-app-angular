@@ -1,6 +1,5 @@
 /**
   * This is a sample of Todo Application.
-  * 
   */
 
 package persistence
@@ -15,7 +14,7 @@ import db.TodoTable
 //~~~~~~~~~~~~~~~~~~~~~~
 case class TodoRepository[P <: JdbcProfile]()(implicit val driver: P)
   extends SlickRepository[Todo.Id, Todo, P]
-  with db.SlickResourceProvider[P] {
+     with db.SlickResourceProvider[P] {
 
   import api._
 
@@ -23,29 +22,24 @@ case class TodoRepository[P <: JdbcProfile]()(implicit val driver: P)
     * Get Todo Data
     */
   def get(id: Id): Future[Option[EntityEmbeddedId]] =
-    RunDBAction(TodoTable, "slave") { _
-      .filter(_.id === id)
-      .result.headOption
-  }
+    RunDBAction(TodoTable, "slave") { _.filter(_.id === id).result.headOption }
 
   def getAll(): Future[Seq[EntityEmbeddedId]] = {
-    RunDBAction(TodoTable, "slave") { _
-      .result
-    }
-  
+    RunDBAction(TodoTable, "slave") { _.result }
+
   }
-  
+
   /**
     * Add Todo Data
-   */
+    */
   def add(entity: EntityWithNoId): Future[Id] =
     RunDBAction(TodoTable) { slick =>
       slick returning slick.map(_.id) += entity.v
     }
 
   /**
-   * Update Todo Data
-   */
+    * Update Todo Data
+    */
   def update(entity: EntityEmbeddedId): Future[Option[EntityEmbeddedId]] =
     RunDBAction(TodoTable) { slick =>
       val row = slick.filter(_.id === entity.id)
@@ -59,8 +53,8 @@ case class TodoRepository[P <: JdbcProfile]()(implicit val driver: P)
     }
 
   /**
-   * Delete Todo Data
-   */
+    * Delete Todo Data
+    */
   def remove(id: Id): Future[Option[EntityEmbeddedId]] =
     RunDBAction(TodoTable) { slick =>
       val row = slick.filter(_.id === id)

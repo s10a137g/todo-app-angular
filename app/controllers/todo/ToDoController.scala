@@ -16,17 +16,12 @@ import ixias.persistence.SlickRepository
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.Future
 
-import scala.concurrent.duration._
-
 import play.api.data._
 import play.api.data.Forms._
-
 import play.api.i18n.I18nSupport
 
-// Todo追加フォーム
 case class TodoInsertFormData(title: String, body: String, categoryId: Long)
 
-//  Todo更新フォーム
 case class TodoUpdateFormData(
   id:         Long,
   title:      String,
@@ -71,7 +66,7 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
     } yield {
       Ok(
         views.html.todo
-          .list(defaultVv.copy(title = "TODO一覧表示画面"), todoList, categoryList)
+          .list(defaultVv.copy(title = "TODO List"), todoList, categoryList)
       )
     }
   }
@@ -82,7 +77,7 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
     } yield {
       Ok(
         views.html.todo.insert(
-          defaultVv.copy(title = "TODO追加画面"),
+          defaultVv.copy(title = "TODO Add"),
           todoInsertForm,
           categoryList
         )
@@ -101,7 +96,7 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
           } yield {
             BadRequest(
               views.html.todo.insert(
-                defaultVv.copy(title = "TODO追加画面"),
+                defaultVv.copy(title = "TODO Add"),
                 formWithErrors,
                 categoryList
               )
@@ -137,7 +132,7 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
         )
         Ok(
           views.html.todo.update(
-            defaultVv.copy(title = "TODO更新画面"),
+            defaultVv.copy(title = "TODO Update"),
             todoUpdateForm.bind(inputMap),
             categoryList
           )
@@ -154,7 +149,7 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
           } yield {
             BadRequest(
               views.html.todo.update(
-                defaultVv.copy(title = "TODO更新画面"),
+                defaultVv.copy(title = "TODO Update"),
                 formWithErrors,
                 categoryList
               )

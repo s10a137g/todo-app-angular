@@ -26,7 +26,7 @@ object Category {
   type WithNoId   = Entity.WithNoId[Id, Category]
   type EmbeddedId = Entity.EmbeddedId[Id, Category]
 
-  // ステータス定義
+  // Color定義
   //~~~~~~~~~~~~~~~~~
   sealed abstract class Color(val code: Short, val name: String)
     extends EnumStatus
@@ -63,8 +63,9 @@ object Category {
       )
     )
   }
+
   def build(
-    id: Id,
+    id:    Id,
     name:  String,
     slug:  String,
     color: Color

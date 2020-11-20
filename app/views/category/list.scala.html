@@ -9,24 +9,37 @@
 
 @(vv: model.ViewValueCommon,  categoryList: Seq[CategoryRepository.EntityEmbeddedId])
 @common.Default(vv){
-  <a href="@controllers.category.routes.CategoryController.displayInsert">カテゴリ追加</a>
-  <table>
+  <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@controllers.category.routes.CategoryController.displayInsert'">
+    <span class="material-icons">add_circle</span>Add 
+  </button>
+
+  <table class="mdl-data-table mdl-js-data-table">
     <tr>
-      <th>カテゴリ名</th>
-      <th>スラッグ</th>
-      <th>色</th>
-      <th>更新</th>
-      <th>削除</th>
+      <th class="mdl-data-table__cell--non-numeric">Name</th>
+      <th class="mdl-data-table__cell--non-numeric">Slug</th>
+      <th class="mdl-data-table__cell--non-numeric">Color</th>
+      <th class="mdl-data-table__cell--non-numeric">Update</th>
+      <th class="mdl-data-table__cell--non-numeric">Delete</th>
     </tr>
     @for(category <- categoryList) {
-    <tr class="main__cstegory-list">
-      <td>@category.v.name</td>
-      <td>@category.v.slug</td>
-      <td>@category.v.color.name</td>
-      <td><a href="@controllers.category.routes.CategoryController.displayUpdate(category.v.id.get)">更新</a></td>
-      <td><a href="@controllers.category.routes.CategoryController.delete(category.v.id.get)" onclick="return deleteConfirm('選択したカテゴリを削除しますか？')">削除</a></td>
-    </tr>
+      <tr class="main__cstegory-list">
+        <td class="mdl-data-table__cell--non-numeric">@category.v.name</td>
+        <td class="mdl-data-table__cell--non-numeric">@category.v.slug</td>
+        <td class="mdl-data-table__cell--non-numeric main__list--@category.v.color.code">@category.v.color.name</td>
+        <td class="mdl-data-table__cell--non-numeric">
+        <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@controllers.category.routes.CategoryController.displayUpdate(category.v.id.get)'">
+        <span class="material-icons">update</span>
+        </button>
+        </td>
+        <td class="mdl-data-table__cell--non-numeric">
+          <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@controllers.category.routes.CategoryController.delete(category.v.id.get)'">
+            <span class="material-icons">delete_forever</span>
+          </button>
+        </td>
+      </tr>
     }
   </table>
-  <a href="@routes.HomeController.index">戻る</a>
+  <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@routes.HomeController.index'">
+    <span class="material-icons">backspace</span> BACK
+  </button>  
 }

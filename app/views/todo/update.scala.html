@@ -15,23 +15,24 @@
 @common.Default(vv){
   @helper.form(action = controllers.todo.routes.TodoController.update()) {
     @helper.CSRF.formField
-
-    @helper.inputText(todoForm("title"),'_label -> "タイトル", 'size -> 40)
-    @helper.textarea(todoForm("body"), '_label -> "本文", 'rows -> 3, 'cols -> 50)
+    @helper.inputText(todoForm("title"),'_label -> "Title", 'size -> 40)
+    @helper.textarea(todoForm("body"), '_label -> "Body", 'rows -> 3, 'cols -> 50)
     @helper.select(
       todoForm("status"),
       options = Status.values.map(i => (i.code.toString, i.name)),
-      '_label -> "ステータス",
+      '_label -> "Status",
     )
     @helper.select(
       todoForm("categoryId"),
       options = categoryList.map(i => (i.v.id.get.toString, i.v.name)),
-      '_label -> " カテゴリ",
+      '_label -> "Category",
     )
 
     <input type="hidden" value="@todoForm.data("id")" name="id">
 
-    <input type="submit" value="更新">
+    <input class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" type="submit" value="Update">
   }
-  <a href="@controllers.todo.routes.TodoController.list">戻る</a></a>
+  <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@controllers.todo.routes.TodoController.list'">
+    <span class="material-icons">backspace</span> BACK
+  </button>  
 }

@@ -11,20 +11,22 @@
 @(vv: model.ViewValueCommon, categoryForm: Form[CategoryUpdateFormData])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @common.Default(vv){
-
   @helper.form(action = controllers.category.routes.CategoryController.update()) {
     @helper.CSRF.formField
-    @helper.inputText(categoryForm("name"),'_label -> "カテゴリ名", 'size -> 20)
-    @helper.inputText(categoryForm("slug"), '_label -> "スラッグ", 'size -> 20)
+    @helper.inputText(categoryForm("name"),'_label -> "Name", 'size -> 20)
+    @helper.inputText(categoryForm("slug"), '_label -> "Slug", 'size -> 20)
     @helper.select(
       categoryForm("color"),
       options = Color.values.map(i => (i.code.toString, i.name)),
-      '_label -> " 色"
+      '_label -> "Color"
     )
     
     <input type="hidden" value="@categoryForm.data("id")" name="id">
-    <input type="submit" value="更新">
+    <input class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect" type="submit" value="Update">
   }
-  <a href="@controllers.category.routes.CategoryController.list">戻る</a>
+  <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@controllers.category.routes.CategoryController.list'">
+    <span class="material-icons">backspace</span> BACK
+  </button>  
+  
 }
 

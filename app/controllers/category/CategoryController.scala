@@ -52,11 +52,7 @@ class CategoryController @Inject() (
         case _                  => Seq(ValidationError("スラッグは英数字のみ入力可能です。"))
       }
 
-      if (errors.isEmpty) {
-        Valid
-      } else {
-        Invalid(errors)
-      }
+      if (errors.isEmpty) Valid else Invalid(errors)
     })
 
   val slugCheck: Mapping[String] = nonEmptyText.verifying(slugCheckConstraint)
@@ -79,7 +75,7 @@ class CategoryController @Inject() (
   )
 
   val defaultVv = ViewValueHome(
-    title  = "カテゴリ一覧表示画面",
+    title  = "Category List",
     cssSrc = Seq("main.css"),
     jsSrc  = Seq("main.js")
   )
@@ -90,7 +86,7 @@ class CategoryController @Inject() (
     } yield {
       Ok(
         views.html.category
-          .list(defaultVv.copy(title = "カテゴリ一覧表示画面"), categoryList)
+          .list(defaultVv.copy(title = "Category List"), categoryList)
       )
     }
   }
@@ -101,7 +97,7 @@ class CategoryController @Inject() (
     } yield {
       Ok(
         views.html.category
-          .insert(defaultVv.copy(title = "カテゴリ追加画面"), categoryInsertForm)
+          .insert(defaultVv.copy(title = "Category Add"), categoryInsertForm)
       )
     }
   }
@@ -116,7 +112,7 @@ class CategoryController @Inject() (
           Future {
             BadRequest(
               views.html.category
-                .insert(defaultVv.copy(title = "カテゴリ追加画面"), formWithErrors)
+                .insert(defaultVv.copy(title = "Category Add"), formWithErrors)
             )
           }
         },
@@ -127,7 +123,7 @@ class CategoryController @Inject() (
               Category(f.name, f.slug, Category.Color(f.color))
             )
           } yield {
-            Redirect("/cutegories/list")
+            Redirect("/categories/list")
           }
         }
       )
@@ -147,7 +143,7 @@ class CategoryController @Inject() (
         )
         Ok(
           views.html.category.update(
-            defaultVv.copy(title = "カテゴリ更新画面"),
+            defaultVv.copy(title = "Categor Update"),
             categoryUpdateForm.bind(inputMap)
           )
         )
@@ -164,14 +160,13 @@ class CategoryController @Inject() (
           } yield {
             BadRequest(
               views.html.category.update(
-                defaultVv.copy(title = "カテゴリ更新画面"),
+                defaultVv.copy(title = "Category Update"),
                 formWithErrors
               )
             )
           }
         },
         (data: CategoryUpdateFormData) => {
-          println(data)
           val category = Category.build(
             Category.Id(data.id),
             data.name,
