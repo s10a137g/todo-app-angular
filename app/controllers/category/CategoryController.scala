@@ -14,7 +14,7 @@ import model.todo.Todo
 import slick.jdbc.JdbcProfile
 import ixias.persistence.SlickRepository
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 
 import scala.concurrent.duration._
 
@@ -87,23 +87,23 @@ class CategoryController @Inject() (
   def list = Action.async { implicit req =>
     for {
       categoryList <- CategoryRepository.getAll()
-    } yield categoryList match {
-      case v: Seq[CategoryRepository.EntityEmbeddedId] =>
-        Ok(
-          views.html.category
-            .list(defaultVv.copy(title = "カテゴリ一覧表示画面"), categoryList)
-        )
-      case _                                           => BadRequest(views.html.error.error(defaultVv))
+    } yield {
+      Ok(
+        views.html.category
+          .list(defaultVv.copy(title = "カテゴリ一覧表示画面"), categoryList)
+      )
     }
   }
 
-  def displayInsert = Action { implicit req =>
-    val categoryList = Await.result(CategoryRepository.getAll(), Duration.Inf)
-
-    Ok(
-      views.html.category
-        .insert(defaultVv.copy(title = "カテゴリ追加画面"), categoryInsertForm)
-    )
+  def displayInsert = Action.async { implicit req =>
+    for {
+      categoryList <- CategoryRepository.getAll
+    } yield {
+      Ok(
+        views.html.category
+          .insert(defaultVv.copy(title = "カテゴリ追加画面"), categoryInsertForm)
+      )
+    }
   }
 
   def insert = Action.async { implicit req =>
@@ -126,40 +126,42 @@ class CategoryController @Inject() (
             result <- CategoryRepository.add(
               Category(f.name, f.slug, Category.Color(f.color))
             )
-          } yield result match {
-            case v: Category.Id => Redirect("/categories/list")
-            case _              => BadRequest(views.html.error.error(defaultVv))
+          } yield {
+            Redirect("/cutegories/list")
           }
         }
       )
   }
 
-  def displayUpdate(id: Long) = Action { implicit req =>
-    val updateCategory =
-      Await.result(CategoryRepository.get(Category.Id(id)), Duration.Inf).get
-    val inputMap       = Map(
-      "id"    -> updateCategory.v.id.get.toString,
-      "name"  -> updateCategory.v.name,
-      "slug"  -> updateCategory.v.slug,
-      "color" -> updateCategory.v.color.code.toString
-    )
-
-    Ok(
-      views.html.category.update(
-        defaultVv.copy(title = "カテゴリ更新画面"),
-        categoryUpdateForm.bind(inputMap)
-      )
-    )
+  def displayUpdate(id: Long) = Action.async { implicit req =>
+    for {
+      maybeUpdateCategory <- CategoryRepository.get(Category.Id(id)),
+    } yield maybeUpdateCategory match {
+      case None                 => BadRequest(views.html.error.error(defaultVv))
+      case Some(updateCategory) =>
+        val inputMap = Map(
+          "id"    -> updateCategory.v.id.get.toString,
+          "name"  -> updateCategory.v.name,
+          "slug"  -> updateCategory.v.slug,
+          "color" -> updateCategory.v.color.code.toString
+        )
+        Ok(
+          views.html.category.update(
+            defaultVv.copy(title = "カテゴリ更新画面"),
+            categoryUpdateForm.bind(inputMap)
+          )
+        )
+    }
   }
 
   def update() = Action.async { implicit req =>
     categoryUpdateForm
       .bindFromRequest().fold(
         (formWithErrors: Form[CategoryUpdateFormData]) => {
-          val categoryList =
-            Await.result(CategoryRepository.getAll(), Duration.Inf)
 
-          Future {
+          for {
+            categoryList <- CategoryRepository.getAll
+          } yield {
             BadRequest(
               views.html.category.update(
                 defaultVv.copy(title = "カテゴリ更新画面"),
@@ -181,7 +183,7 @@ class CategoryController @Inject() (
             result <- CategoryRepository.update(category)
           } yield result match {
             case Some(v) => Redirect("/categories/list")
-            case _       => BadRequest(views.html.error.error(defaultVv))
+            case None    => BadRequest(views.html.error.error(defaultVv))
           }
         }
       )
@@ -192,7 +194,7 @@ class CategoryController @Inject() (
       result <- CategoryRepository.remove(Category.Id(id))
     } yield result match {
       case Some(v) => Redirect("/categories/list")
-      case _       => BadRequest(views.html.error.error(defaultVv))
+      case None    => BadRequest(views.html.error.error(defaultVv))
     }
   }
 }

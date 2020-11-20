@@ -14,7 +14,7 @@ import model.todo.Todo
 import slick.jdbc.JdbcProfile
 import ixias.persistence.SlickRepository
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.{Await, Future}
+import scala.concurrent.Future
 
 import scala.concurrent.duration._
 
@@ -64,26 +64,30 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
     jsSrc  = Seq("main.js")
   )
 
-  def list() = Action { implicit req =>
-    val todoList     = Await.result(TodoRepository.getAll(), Duration.Inf)
-    val categoryList = Await.result(CategoryRepository.getAll(), Duration.Inf)
-
-    Ok(
-      views.html.todo
-        .list(defaultVv.copy(title = "TODO一覧表示画面"), todoList, categoryList)
-    )
+  def list() = Action.async { implicit req =>
+    for {
+      todoList     <- TodoRepository.getAll()
+      categoryList <- CategoryRepository.getAll()
+    } yield {
+      Ok(
+        views.html.todo
+          .list(defaultVv.copy(title = "TODO一覧表示画面"), todoList, categoryList)
+      )
+    }
   }
 
-  def displayInsert() = Action { implicit req =>
-    val categoryList = Await.result(CategoryRepository.getAll(), Duration.Inf)
-
-    Ok(
-      views.html.todo.insert(
-        defaultVv.copy(title = "TODO追加画面"),
-        todoInsertForm,
-        categoryList
+  def displayInsert() = Action.async { implicit req =>
+    for {
+      categoryList <- CategoryRepository.getAll()
+    } yield {
+      Ok(
+        views.html.todo.insert(
+          defaultVv.copy(title = "TODO追加画面"),
+          todoInsertForm,
+          categoryList
+        )
       )
-    )
+    }
   }
 
   def insert() = Action.async { implicit req =>
@@ -92,10 +96,9 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
       .bindFromRequest().fold(
         // エラー時遷移
         (formWithErrors: Form[TodoInsertFormData]) => {
-          val categoryList =
-            Await.result(CategoryRepository.getAll(), Duration.Inf)
-
-          Future {
+          for {
+            categoryList <- CategoryRepository.getAll()
+          } yield {
             BadRequest(
               views.html.todo.insert(
                 defaultVv.copy(title = "TODO追加画面"),
@@ -111,43 +114,44 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
             result <- TodoRepository.add(
               Todo(f.categoryId, f.title, f.body, Todo.Status(0))
             )
-          } yield result match {
-            case v: Todo.Id => Redirect("/todos/list")
-            case _          => BadRequest(views.html.error.error(defaultVv))
+          } yield {
+            Redirect("/todos/list")
           }
         }
       )
   }
 
-  def displayUpdate(id: Long) = Action { implicit req =>
-    val updateTodo   =
-      Await.result(TodoRepository.get(Todo.Id(id)), Duration.Inf).get
-    val categoryList = Await.result(CategoryRepository.getAll(), Duration.Inf)
-    val inputMap     = Map(
-      "id"         -> updateTodo.v.id.get.toString,
-      "categoryId" -> updateTodo.v.categoryId.toString,
-      "title"      -> updateTodo.v.title,
-      "body"       -> updateTodo.v.body,
-      "status"     -> updateTodo.v.state.code.toString
-    )
-
-    Ok(
-      views.html.todo.update(
-        defaultVv.copy(title = "TODO更新画面"),
-        todoUpdateForm.bind(inputMap),
-        categoryList
-      )
-    )
+  def displayUpdate(id: Long) = Action.async { implicit req =>
+    for {
+      maybeUpdateTodo <- TodoRepository.get(Todo.Id(id))
+      categoryList    <- CategoryRepository.getAll
+    } yield maybeUpdateTodo match {
+      case None             => BadRequest(views.html.error.error(defaultVv))
+      case Some(updateTodo) =>
+        val inputMap = Map(
+          "id"         -> updateTodo.v.id.get.toString,
+          "categoryId" -> updateTodo.v.categoryId.toString,
+          "title"      -> updateTodo.v.title,
+          "body"       -> updateTodo.v.body,
+          "status"     -> updateTodo.v.state.code.toString
+        )
+        Ok(
+          views.html.todo.update(
+            defaultVv.copy(title = "TODO更新画面"),
+            todoUpdateForm.bind(inputMap),
+            categoryList
+          )
+        )
+    }
   }
 
   def update() = Action.async { implicit req =>
     todoUpdateForm
       .bindFromRequest().fold(
         (formWithErrors: Form[TodoUpdateFormData]) => {
-          val categoryList =
-            Await.result(CategoryRepository.getAll(), Duration.Inf)
-
-          Future {
+          for {
+            categoryList <- CategoryRepository.getAll()
+          } yield {
             BadRequest(
               views.html.todo.update(
                 defaultVv.copy(title = "TODO更新画面"),
@@ -185,5 +189,4 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
       case _       => BadRequest(views.html.error.error(defaultVv))
     }
   }
-
 }
