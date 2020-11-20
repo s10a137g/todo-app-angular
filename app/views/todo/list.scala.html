@@ -10,24 +10,25 @@
 @(vv: model.ViewValueCommon, todoList: Seq[TodoRepository.EntityEmbeddedId], categoryList: Seq[CategoryRepository.EntityEmbeddedId])
 @common.Default(vv){
   <a href="@controllers.todo.routes.TodoController.displayInsert">Todo追加</a>
-<table>
-  <tr>
-    <th>タイトル</th>
-    <th>本文</th>
-    <th>ステータス</th>
-    <th>カテゴリ名</th>
-    <th>更新</th>
-    <th>削除</th>
-  </tr>
-  @for(todo <- todoList) {
+  <table>
+    <tr>
+      <th>タイトル</th>
+      <th>本文</th>
+      <th>ステータス</th>
+      <th>カテゴリ名</th>
+      <th>更新</th>
+      <th>削除</th>
+    </tr>
+    @for(todo <- todoList) {
     <tr class="main__list--@todo.v.categoryId">
       <td>@todo.v.title</td>
       <td>@todo.v.body</td>
       <td>@todo.v.state.name</td>
       <td>@categoryList.find(_.id == todo.v.categoryId).map(_.v.name)</td>
-      <td><a href="@controllers.todo.routes.TodoController.displayUpdate(todo.v.id.get)">更新</td>
-      <td><a href="@controllers.todo.routes.TodoController.delete(todo.v.id.get)">削除</td>
+      <td><a href="@controllers.todo.routes.TodoController.displayUpdate(todo.v.id.get)">更新</a></td>
+      <td><a href="@controllers.todo.routes.TodoController.delete(todo.v.id.get)" onclick="return deleteConfirm('選択したTODOを削除しますか？');">削除</td>
     </tr>
-  }
-</table>
+    }
+  </table>
+  <a href="@routes.HomeController.index">戻る</a>
 }

@@ -10,23 +10,23 @@
 @(vv: model.ViewValueCommon,  categoryList: Seq[CategoryRepository.EntityEmbeddedId])
 @common.Default(vv){
   <a href="@controllers.category.routes.CategoryController.displayInsert">カテゴリ追加</a>
-<table>
-  <tr>
-    <th>カテゴリ名</th>
-    <th>スラッグ</th>
-    <th>色</th>
-    <th>更新</th>
-    <th>削除</th>
-  </tr>
-  @for(category <- categoryList) {
+  <table>
+    <tr>
+      <th>カテゴリ名</th>
+      <th>スラッグ</th>
+      <th>色</th>
+      <th>更新</th>
+      <th>削除</th>
+    </tr>
+    @for(category <- categoryList) {
     <tr class="main__cstegory-list">
       <td>@category.v.name</td>
       <td>@category.v.slug</td>
       <td>@category.v.color.name</td>
-      <td><a href="@controllers.category.routes.CategoryController.displayUpdate(category.v.id.get)">更新</td>
-      <td><a href="@controllers.category.routes.CategoryController.delete(category.v.id.get)">削除</td>
+      <td><a href="@controllers.category.routes.CategoryController.displayUpdate(category.v.id.get)">更新</a></td>
+      <td><a href="@controllers.category.routes.CategoryController.delete(category.v.id.get)" onclick="return deleteConfirm('選択したカテゴリを削除しますか？')">削除</a></td>
     </tr>
-  }
-</table>
+    }
+  </table>
+  <a href="@routes.HomeController.index">戻る</a>
 }
-
