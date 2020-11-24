@@ -2,13 +2,13 @@
   * This is a sample of Todo Application.
   */
 
-package persistence.db
+package lib.persistence.db
 
 import java.time.LocalDateTime
 import slick.jdbc.JdbcProfile
 import ixias.persistence.model.Table
 
-import model.category.Category
+import lib.model.Category
 
 // CategoryTable: Categoryテーブルへのマッピングを行う
 //~~~~~~~~~~~~~~
@@ -35,15 +35,15 @@ case class CategoryTable[P <: JdbcProfile]()(implicit val driver: P)
     // Columns
     /* @1 */
     def id        = column[Id]("id", O.UInt64, O.PrimaryKey, O.AutoInc)
-    /* @3 */
+    /* @2 */
     def name      = column[String]("name", O.Utf8Char255)
-    /* @4 */
+    /* @3 */
     def slug      = column[String]("slug", O.Utf8Char255)
-    /* @5 */
+    /* @4 */
     def color     = column[Color]("color", O.UInt8)
-    /* @6 */
+    /* @5 */
     def updatedAt = column[LocalDateTime]("updated_at", O.TsCurrent)
-    /* @7 */
+    /* @6 */
     def createdAt = column[LocalDateTime]("created_at", O.Ts)
 
     type TableElementTuple = (

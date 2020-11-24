@@ -4,11 +4,11 @@
 *
 *@
 @import controllers.todo.TodoUpdateFormData
-@import persistence.persistence.onMySQL.{CategoryRepository, TodoRepository}
-@import persistence.persistence.onMySQL.CategoryRepository._
-@import persistence.persistence.onMySQL.TodoRepository._
+@import lib.persistence.onMySQL.{CategoryRepository, TodoRepository}
+@import lib.persistence.onMySQL.CategoryRepository._
+@import lib.persistence.onMySQL.TodoRepository._
 @import helper._
-@import model.todo.Todo.Status
+@import lib.model.Todo.Status
 
 @(vv: model.ViewValueCommon, todoForm: Form[TodoUpdateFormData], categoryList: Seq[CategoryRepository.EntityEmbeddedId])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 

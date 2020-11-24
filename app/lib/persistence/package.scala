@@ -1,8 +1,4 @@
-/**
-  * This is a sample of Todo Application.
-  */
-
-// package lib
+package lib
 
 package object persistence {
 
@@ -10,6 +6,8 @@ package object persistence {
 
   object onMySQL {
     implicit lazy val driver = slick.jdbc.MySQLProfile
-    object TodoRepository extends TodoRepository
+    object TodoRepository     extends TodoRepository
+    object CategoryRepository extends CategoryRepository
+
   }
 }

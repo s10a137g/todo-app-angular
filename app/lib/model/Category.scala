@@ -1,4 +1,4 @@
-package model.category
+package lib.model
 
 import ixias.model._
 import ixias.util.EnumStatus

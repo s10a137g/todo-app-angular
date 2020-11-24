@@ -4,9 +4,9 @@
 *
 *@
 @import controllers.category.CategoryInsertFormData
-@import persistence.persistence.onMySQL.CategoryRepository._
+@import lib.persistence.onMySQL.CategoryRepository._
 @import helper._
-@import model.category.Category.Color
+@import lib.model.Category.Color
 
 @(vv: model.ViewValueCommon, categoryForm: Form[CategoryInsertFormData])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 

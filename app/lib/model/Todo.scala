@@ -2,7 +2,7 @@
   * This is a sample of Todo Application.
   */
 
-package model.todo
+package lib.model
 
 import ixias.model._
 import ixias.util.EnumStatus

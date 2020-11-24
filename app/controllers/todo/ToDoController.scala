@@ -7,10 +7,10 @@ package controllers.todo
 import javax.inject._
 import play.api.mvc._
 
-import persistence.persistence.onMySQL.{CategoryRepository, TodoRepository}
+import lib.persistence.onMySQL.{CategoryRepository, TodoRepository}
 
 import model.ViewValueHome
-import model.todo.Todo
+import lib.model.Todo
 import slick.jdbc.JdbcProfile
 import ixias.persistence.SlickRepository
 import scala.concurrent.ExecutionContext.Implicits.global

@@ -1,41 +1,48 @@
-/**
-  * This is a sample of Todo Application.
-  */
-
 package lib.persistence
 
 import scala.concurrent.Future
 import ixias.persistence.SlickRepository
-import lib.model.User
+import lib.model.Category
 import slick.jdbc.JdbcProfile
+import lib.persistence.db.CategoryTable
 
-// UserRepository: UserTableへのクエリ発行を行うRepository層の定義
+// CategoryRepository: CategoryTableへのクエリ発行を行うRepository層の定義
 //~~~~~~~~~~~~~~~~~~~~~~
-case class UserRepository[P <: JdbcProfile]()(implicit val driver: P)
-  extends SlickRepository[User.Id, User, P]
-     with db.SlickResourceProvider[P] {
+case class CategoryRepository[P <: JdbcProfile]()(implicit val driver: P)
+  extends SlickRepository[Category.Id, Category, P]
+  with db.SlickResourceProvider[P] {
 
   import api._
 
   /**
-    * Get User Data
+    * Get Category Data
     */
   def get(id: Id): Future[Option[EntityEmbeddedId]] =
-    RunDBAction(UserTable, "slave") { _.filter(_.id === id).result.headOption }
+    RunDBAction(CategoryTable, "slave") { _
+      .filter(_.id === id)
+      .result.headOption
+  }
 
+  def getAll(): Future[Seq[EntityEmbeddedId]] = {
+    RunDBAction(CategoryTable, "slave") { _
+      .result
+    }
+  
+  }
+  
   /**
-    * Add User Data
-    */
+    * Add Category Data
+   */
   def add(entity: EntityWithNoId): Future[Id] =
-    RunDBAction(UserTable) { slick =>
+    RunDBAction(CategoryTable) { slick =>
       slick returning slick.map(_.id) += entity.v
     }
 
   /**
-    * Update User Data
-    */
+   * Update Category Data
+   */
   def update(entity: EntityEmbeddedId): Future[Option[EntityEmbeddedId]] =
-    RunDBAction(UserTable) { slick =>
+    RunDBAction(CategoryTable) { slick =>
       val row = slick.filter(_.id === entity.id)
       for {
         old <- row.result.headOption
@@ -47,10 +54,10 @@ case class UserRepository[P <: JdbcProfile]()(implicit val driver: P)
     }
 
   /**
-    * Delete User Data
-    */
+   * Delete Category Data
+   */
   def remove(id: Id): Future[Option[EntityEmbeddedId]] =
-    RunDBAction(UserTable) { slick =>
+    RunDBAction(CategoryTable) { slick =>
       val row = slick.filter(_.id === id)
       for {
         old <- row.result.headOption
@@ -61,4 +68,3 @@ case class UserRepository[P <: JdbcProfile]()(implicit val driver: P)
       } yield old
     }
 }
-

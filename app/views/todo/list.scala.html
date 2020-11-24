@@ -3,11 +3,11 @@
 * to do sample project
 *
 *@
-@import persistence.persistence.onMySQL.{TodoRepository, CategoryRepository}
-@import persistence.persistence.onMySQL.TodoRepository._
-@import persistence.persistence.onMySQL.CategoryRepository._
+@import lib.persistence.onMySQL.{TodoRepository, CategoryRepository}
+@import lib.persistence.onMySQL.TodoRepository._
+@import lib.persistence.onMySQL.CategoryRepository._
 
-@import model.category.Category.Color
+@import lib.model.Category.Color
 
 @(vv: model.ViewValueCommon, todoList: Seq[TodoRepository.EntityEmbeddedId], categoryList: Seq[CategoryRepository.EntityEmbeddedId])
 @common.Default(vv){
