@@ -10,6 +10,11 @@ import play.api.mvc._
 import lib.persistence.onMySQL.{CategoryRepository, TodoRepository}
 import lib.model.Category
 import model.ViewValueHome
+import model.category.{
+  ViewValueCategory,
+  ViewValueCategoryEdit,
+  ViewValueCategoryList
+}
 import lib.model.Todo
 import slick.jdbc.JdbcProfile
 import ixias.persistence.SlickRepository
@@ -84,22 +89,33 @@ class CategoryController @Inject() (
     for {
       categoryList <- CategoryRepository.getAll()
     } yield {
+      val viewValueCategory = categoryList.map(i =>
+        ViewValueCategory(i.id.toLong, i.v.name, i.v.slug, i.v.color)
+      )
       Ok(
-        views.html.category
-          .list(defaultVv.copy(title = "Category List"), categoryList)
+        views.html.category.list(
+          ViewValueCategoryList(
+            "Category List",
+            cssSrc = Seq("main.css"),
+            jsSrc  = Seq("main.js"),
+            viewValueCategory
+          )
+        )
       )
     }
   }
 
-  def displayInsert = Action.async { implicit req =>
-    for {
-      categoryList <- CategoryRepository.getAll
-    } yield {
-      Ok(
-        views.html.category
-          .insert(defaultVv.copy(title = "Category Add"), categoryInsertForm)
+  def displayInsert = Action { implicit req =>
+    Ok(
+      views.html.category.insert(
+        ViewValueCategoryEdit(
+          "Category Add",
+          Seq("main.css"),
+          Seq("main.js")
+        ),
+        categoryInsertForm
       )
-    }
+    )
   }
 
   def insert = Action.async { implicit req =>
@@ -109,10 +125,18 @@ class CategoryController @Inject() (
         // エラー時遷移
         (formWithErrors: Form[CategoryInsertFormData]) => {
 
-          Future {
+          for {
+            categoryList <- CategoryRepository.getAll
+          } yield {
             BadRequest(
-              views.html.category
-                .insert(defaultVv.copy(title = "Category Add"), formWithErrors)
+              views.html.category.insert(
+                ViewValueCategoryEdit(
+                  "Category Add",
+                  Seq("main.css"),
+                  Seq("main.js")
+                ),
+                formWithErrors
+              )
             )
           }
         },
@@ -123,7 +147,7 @@ class CategoryController @Inject() (
               Category(f.name, f.slug, Category.Color(f.color))
             )
           } yield {
-            Redirect("/categories/list")
+            Redirect(controllers.category.routes.CategoryController.list)
           }
         }
       )
@@ -141,9 +165,14 @@ class CategoryController @Inject() (
           "slug"  -> updateCategory.v.slug,
           "color" -> updateCategory.v.color.code.toString
         )
+      
         Ok(
           views.html.category.update(
-            defaultVv.copy(title = "Categor Update"),
+            ViewValueCategoryEdit(
+              "Category Update",
+              Seq("main.css"),
+              Seq("main.js")
+            ),
             categoryUpdateForm.bind(inputMap)
           )
         )
@@ -154,13 +183,14 @@ class CategoryController @Inject() (
     categoryUpdateForm
       .bindFromRequest().fold(
         (formWithErrors: Form[CategoryUpdateFormData]) => {
-
-          for {
-            categoryList <- CategoryRepository.getAll
-          } yield {
+          Future {
             BadRequest(
               views.html.category.update(
-                defaultVv.copy(title = "Category Update"),
+                ViewValueCategoryEdit(
+                  "Category Add",
+                  Seq("main.css"),
+                  Seq("main.js")
+                ),
                 formWithErrors
               )
             )
@@ -177,7 +207,8 @@ class CategoryController @Inject() (
           for {
             result <- CategoryRepository.update(category)
           } yield result match {
-            case Some(v) => Redirect("/categories/list")
+            case Some(v) =>
+              Redirect(controllers.category.routes.CategoryController.list)
             case None    => BadRequest(views.html.error.error(defaultVv))
           }
         }
@@ -188,7 +219,8 @@ class CategoryController @Inject() (
     for {
       result <- CategoryRepository.remove(Category.Id(id))
     } yield result match {
-      case Some(v) => Redirect("/categories/list")
+      case Some(v) =>
+        Redirect(controllers.category.routes.CategoryController.list)
       case None    => BadRequest(views.html.error.error(defaultVv))
     }
   }
