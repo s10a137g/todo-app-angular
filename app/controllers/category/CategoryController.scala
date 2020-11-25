@@ -10,6 +10,7 @@ import play.api.mvc._
 import lib.persistence.onMySQL.{CategoryRepository, TodoRepository}
 import lib.model.Category
 import model.ViewValueHome
+import model.error.ViewValueError
 import model.category.{
   ViewValueCategory,
   ViewValueCategoryEdit,
@@ -77,12 +78,6 @@ class CategoryController @Inject() (
       "slug"  -> slugCheck,
       "color" -> shortNumber
     )(CategoryUpdateFormData.apply)(CategoryUpdateFormData.unapply)
-  )
-
-  val defaultVv = ViewValueHome(
-    title  = "Category List",
-    cssSrc = Seq("main.css"),
-    jsSrc  = Seq("main.js")
   )
 
   def list = Action.async { implicit req =>
@@ -157,7 +152,12 @@ class CategoryController @Inject() (
     for {
       maybeUpdateCategory <- CategoryRepository.get(Category.Id(id)),
     } yield maybeUpdateCategory match {
-      case None                 => BadRequest(views.html.error.error(defaultVv))
+      case None                 =>
+        BadRequest(
+          views.html.error.error(
+            ViewValueError("Category Add", Seq("main.css"), Seq("main.js"))
+          )
+        )
       case Some(updateCategory) =>
         val inputMap = Map(
           "id"    -> updateCategory.v.id.get.toString,
@@ -165,7 +165,6 @@ class CategoryController @Inject() (
           "slug"  -> updateCategory.v.slug,
           "color" -> updateCategory.v.color.code.toString
         )
-      
         Ok(
           views.html.category.update(
             ViewValueCategoryEdit(
@@ -209,7 +208,16 @@ class CategoryController @Inject() (
           } yield result match {
             case Some(v) =>
               Redirect(controllers.category.routes.CategoryController.list)
-            case None    => BadRequest(views.html.error.error(defaultVv))
+            case None    =>
+              BadRequest(
+                views.html.error.error(
+                  ViewValueError(
+                    "Category Add",
+                    Seq("main.css"),
+                    Seq("main.js")
+                  )
+                )
+              )
           }
         }
       )
@@ -221,7 +229,12 @@ class CategoryController @Inject() (
     } yield result match {
       case Some(v) =>
         Redirect(controllers.category.routes.CategoryController.list)
-      case None    => BadRequest(views.html.error.error(defaultVv))
+      case None    =>
+        BadRequest(
+          views.html.error.error(
+            ViewValueError("Category Add", Seq("main.css"), Seq("main.js"))
+          )
+        )
     }
   }
 }

@@ -10,6 +10,7 @@ import play.api.mvc._
 import lib.persistence.onMySQL.{CategoryRepository, TodoRepository}
 
 import model.ViewValueHome
+import model.error.ViewValueError
 import model.todo.{ViewValueTodo, ViewValueTodoEdit, ViewValueTodoList}
 import lib.model.Todo
 import slick.jdbc.JdbcProfile
@@ -52,12 +53,6 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
       "status"     -> shortNumber,
       "categoryId" -> longNumber
     )(TodoUpdateFormData.apply)(TodoUpdateFormData.unapply)
-  )
-
-  val defaultVv = ViewValueHome(
-    title  = "Category List",
-    cssSrc = Seq("main.css"),
-    jsSrc  = Seq("main.js")
   )
 
   def list() = Action.async { implicit req =>
@@ -140,7 +135,7 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
               Todo(f.categoryId, f.title, f.body, Todo.Status(0))
             )
           } yield {
-            Redirect("/todos/list")
+            Redirect(controllers.todo.routes.TodoController.list)
           }
         }
       )
@@ -151,7 +146,12 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
       maybeUpdateTodo <- TodoRepository.get(Todo.Id(id))
       categoryList    <- CategoryRepository.getAll
     } yield maybeUpdateTodo match {
-      case None             => BadRequest(views.html.error.error(defaultVv))
+      case None             =>
+        BadRequest(
+          views.html.error.error(
+            ViewValueError("Category Add", Seq("main.css"), Seq("main.js"))
+          )
+        )
       case Some(updateTodo) =>
         val inputMap = Map(
           "id"         -> updateTodo.v.id.get.toString,
@@ -207,8 +207,18 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
           for {
             result <- TodoRepository.update(todo)
           } yield result match {
-            case Some(v) => Redirect(controllers.todo.routes.TodoController.list)
-            case _       => BadRequest(views.html.error.error(defaultVv))
+            case Some(v) =>
+              Redirect(controllers.todo.routes.TodoController.list)
+            case _       =>
+              BadRequest(
+                views.html.error.error(
+                  ViewValueError(
+                    "Category Add",
+                    Seq("main.css"),
+                    Seq("main.js")
+                  )
+                )
+              )
           }
         }
       )
@@ -219,7 +229,12 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
       result <- TodoRepository.remove(Todo.Id(id))
     } yield result match {
       case Some(v) => Redirect(controllers.todo.routes.TodoController.list)
-      case _       => BadRequest(views.html.error.error(defaultVv))
+      case _       =>
+        BadRequest(
+          views.html.error.error(
+            ViewValueError("Category Add", Seq("main.css"), Seq("main.js"))
+          )
+        )
     }
   }
 }
