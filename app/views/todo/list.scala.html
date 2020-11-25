@@ -9,7 +9,7 @@
 
 @import lib.model.Category.Color
 
-@(vv: model.ViewValueCommon, todoList: Seq[TodoRepository.EntityEmbeddedId], categoryList: Seq[CategoryRepository.EntityEmbeddedId])
+@(vv: model.todo.ViewValueTodoList)
 @common.Default(vv){
   <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@controllers.todo.routes.TodoController.displayInsert'">
     <span class="material-icons">add_circle</span>Add 
@@ -23,24 +23,19 @@
       <th class="mdl-data-table__cell--non-numeric">Update</th>
       <th class="mdl-data-table__cell--non-numeric">Delete</th>
     </tr>
-    @for(todo <- todoList) {
+    @for(todo <- vv.todoList) {
     <tr>
-      <td class="mdl-data-table__cell--non-numeric" >@todo.v.title</td>
-      <td class="mdl-data-table__cell--non-numeric">@todo.v.body</td>
-      <td class="mdl-data-table__cell--non-numeric">@todo.v.state.name</td>
-      <td class="mdl-data-table__cell--non-numeric main__list--@todo.v.categoryId" >
-        @categoryList.find(_.id == todo.v.categoryId) match {
-          case Some(x) => {@x.v.name}
-          case None => {-}
-        }
-       </td>
+      <td class="mdl-data-table__cell--non-numeric" >@todo.title</td>
+      <td class="mdl-data-table__cell--non-numeric">@todo.body</td>
+      <td class="mdl-data-table__cell--non-numeric">@todo.statusName</td>
+      <td class="mdl-data-table__cell--non-numeric main__list--@todo.categoryColor">@todo.categoryName</td>
       <td class="mdl-data-table__cell--non-numeric" >
-        <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@controllers.todo.routes.TodoController.displayUpdate(todo.v.id.get)'">
+        <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@controllers.todo.routes.TodoController.displayUpdate(todo.id)'">
         <span class="material-icons">update</span>
         </button>
       </td>
       <td class="mdl-data-table__cell--non-numeric" >
-        <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@controllers.todo.routes.TodoController.delete(todo.v.id.get)'">
+        <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@controllers.todo.routes.TodoController.delete(todo.id)'">
         <span class="material-icons">delete_forever</span>
         </button>
       </td>

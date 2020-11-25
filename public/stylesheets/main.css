@@ -25,15 +25,15 @@ body {
   font-weight:       bold;
 }
 
-.main__list--1 {
+.main__list--RED {
   background-color: #FF7D7D;
 }
 
-.main__list--2 {
+.main__list--YELLOW {
   background-color: #FFD580;
 }
 
-.main__list--3 {
+.main__list--GREEN {
   background-color: #B3E284;
 }
 

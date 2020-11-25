@@ -10,7 +10,7 @@
 @import helper._
 @import lib.model.Todo.Status
 
-@(vv: model.ViewValueCommon, todoForm: Form[TodoUpdateFormData], categoryList: Seq[CategoryRepository.EntityEmbeddedId])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
+@(vv: model.todo.ViewValueTodoEdit, todoForm: Form[TodoUpdateFormData])(implicit request: RequestHeader, messagesProvider: MessagesProvider)
 
 @common.Default(vv){
   @helper.form(action = controllers.todo.routes.TodoController.update()) {
@@ -24,7 +24,7 @@
     )
     @helper.select(
       todoForm("categoryId"),
-      options = categoryList.map(i => (i.v.id.get.toString, i.v.name)),
+      options = vv.categoryList.map(i => (i.v.id.get.toString, i.v.name)),
       '_label -> "Category",
     )
 

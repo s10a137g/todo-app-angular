@@ -8,7 +8,7 @@
 @import helper._
 
 
-@(vv: model.ViewValueCommon, todoForm: Form[TodoInsertFormData], categoryList: Seq[EntityEmbeddedId])(implicit request:
+@(vv: model.todo.ViewValueTodoEdit, todoForm: Form[TodoInsertFormData])(implicit request: 
 RequestHeader, messagesProvider: MessagesProvider)
 
 @common.Default(vv){
@@ -19,7 +19,7 @@ RequestHeader, messagesProvider: MessagesProvider)
     @helper.textarea(todoForm("body"), '_label -> "Body", 'rows -> 3, 'cols -> 50)
     @helper.select(
       todoForm("categoryId"),
-      options = categoryList.map(i => (i.v.id.get.toString, i.v.name)),
+      options = vv.categoryList.map(i => (i.v.id.get.toString, i.v.name)),
       '_label -> "Category"
     )
 

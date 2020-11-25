@@ -10,6 +10,7 @@ import play.api.mvc._
 import lib.persistence.onMySQL.{CategoryRepository, TodoRepository}
 
 import model.ViewValueHome
+import model.todo.{ViewValueTodo, ViewValueTodoEdit, ViewValueTodoList}
 import lib.model.Todo
 import slick.jdbc.JdbcProfile
 import ixias.persistence.SlickRepository
@@ -54,7 +55,7 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
   )
 
   val defaultVv = ViewValueHome(
-    title  = "Todo一覧表示画面",
+    title  = "Category List",
     cssSrc = Seq("main.css"),
     jsSrc  = Seq("main.js")
   )
@@ -64,9 +65,30 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
       todoList     <- TodoRepository.getAll()
       categoryList <- CategoryRepository.getAll()
     } yield {
+      val viewValueTodo = todoList.map(i =>
+        ViewValueTodo(
+          i.id.toLong,
+          i.v.title,
+          i.v.body,
+          i.v.state.name,
+          categoryList
+            .find(_.id.toLong == i.v.categoryId).map(_.v.name).getOrElse(""),
+          categoryList
+            .find(_.id.toLong == i.v.categoryId).map(_.v.color.name).getOrElse(
+              ""
+            )
+        )
+      )
+
       Ok(
-        views.html.todo
-          .list(defaultVv.copy(title = "TODO List"), todoList, categoryList)
+        views.html.todo.list(
+          ViewValueTodoList(
+            "TODO List",
+            Seq("main.css"),
+            Seq("main.js"),
+            viewValueTodo
+          )
+        )
       )
     }
   }
@@ -77,9 +99,13 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
     } yield {
       Ok(
         views.html.todo.insert(
-          defaultVv.copy(title = "TODO Add"),
-          todoInsertForm,
-          categoryList
+          ViewValueTodoEdit(
+            "TODO Add",
+            Seq("main.css"),
+            Seq("main.js"),
+            categoryList
+          ),
+          todoInsertForm
         )
       )
     }
@@ -96,9 +122,13 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
           } yield {
             BadRequest(
               views.html.todo.insert(
-                defaultVv.copy(title = "TODO Add"),
-                formWithErrors,
-                categoryList
+                ViewValueTodoEdit(
+                  "TODO Add",
+                  Seq("main.css"),
+                  Seq("main.js"),
+                  categoryList
+                ),
+                todoInsertForm
               )
             )
           }
@@ -132,9 +162,13 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
         )
         Ok(
           views.html.todo.update(
-            defaultVv.copy(title = "TODO Update"),
-            todoUpdateForm.bind(inputMap),
-            categoryList
+            ViewValueTodoEdit(
+              "TODO Update",
+              Seq("main.css"),
+              Seq("main.js"),
+              categoryList
+            ),
+            todoUpdateForm.bind(inputMap)
           )
         )
     }
@@ -149,9 +183,13 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
           } yield {
             BadRequest(
               views.html.todo.update(
-                defaultVv.copy(title = "TODO Update"),
-                formWithErrors,
-                categoryList
+                ViewValueTodoEdit(
+                  "TODO Update",
+                  Seq("main.css"),
+                  Seq("main.js"),
+                  categoryList
+                ),
+                formWithErrors
               )
             )
           }
