@@ -160,7 +160,7 @@ class CategoryController @Inject() (
         )
       case Some(updateCategory) =>
         val inputMap = Map(
-          "id"    -> updateCategory.v.id.get.toString,
+          "id"    -> updateCategory.id.toString,
           "name"  -> updateCategory.v.name,
           "slug"  -> updateCategory.v.slug,
           "color" -> updateCategory.v.color.code.toString

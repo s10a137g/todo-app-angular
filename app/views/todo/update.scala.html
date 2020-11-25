@@ -24,7 +24,7 @@
     )
     @helper.select(
       todoForm("categoryId"),
-      options = vv.categoryList.map(i => (i.v.id.get.toString, i.v.name)),
+      options = vv.categoryList.map(i => (i.id.toString, i.v.name)),
       '_label -> "Category",
     )
 
