@@ -9,6 +9,7 @@ import slick.jdbc.JdbcProfile
 import ixias.persistence.model.Table
 
 import lib.model.Todo
+import lib.model.Category
 
 // TodoTable: Todoテーブルへのマッピングを行う
 //~~~~~~~~~~~~~~
@@ -36,7 +37,7 @@ case class TodoTable[P <: JdbcProfile]()(implicit val driver: P)
     /* @1 */
     def id         = column[Id]("id", O.UInt64, O.PrimaryKey, O.AutoInc)
     /* @2 */
-    def categoryId = column[Long]("category_id", O.UInt64)
+    def categoryId = column[Category.Id]("category_id", O.UInt64)
     /* @3 */
     def title      = column[String]("title", O.Utf8Char255)
     /* @4 */
@@ -64,7 +65,7 @@ case class TodoTable[P <: JdbcProfile]()(implicit val driver: P)
       (t: TableElementTuple) =>
         Todo(
           t._1,
-          t._2,
+          Category.Id(t._2),
           t._3,
           t._4,
           t._5,
@@ -76,7 +77,7 @@ case class TodoTable[P <: JdbcProfile]()(implicit val driver: P)
         Todo.unapply(v).map { t =>
           (
             t._1,
-            t._2,
+            Category.Id(t._2),
             t._3,
             t._4,
             t._5,

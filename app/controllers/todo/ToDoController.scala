@@ -8,6 +8,7 @@ import javax.inject._
 import play.api.mvc._
 
 import lib.persistence.onMySQL.{CategoryRepository, TodoRepository}
+import lib.model.Category
 
 import model.ViewValueHome
 import model.error.ViewValueError
@@ -132,7 +133,7 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
         (f: TodoInsertFormData) => {
           for {
             result <- TodoRepository.add(
-              Todo(f.categoryId, f.title, f.body, Todo.Status(0))
+              Todo(Category.Id(f.categoryId), f.title, f.body, Todo.Status(0))
             )
           } yield {
             Redirect(controllers.todo.routes.TodoController.list)
@@ -154,7 +155,7 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
         )
       case Some(updateTodo) =>
         val inputMap = Map(
-          "id"         -> updateTodo.v.id.get.toString,
+          "id"         -> updateTodo.id.toString,
           "categoryId" -> updateTodo.v.categoryId.toString,
           "title"      -> updateTodo.v.title,
           "body"       -> updateTodo.v.body,
@@ -198,7 +199,7 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
 
           val todo = Todo.build(
             Todo.Id(data.id),
-            data.categoryId,
+            Category.Id(data.categoryId),
             data.title,
             data.body,
             Todo.Status(data.status)

@@ -13,7 +13,7 @@ import java.time.LocalDateTime
 import Todo._
 case class Todo(
   id:         Option[Id],
-  categoryId: Long,
+  categoryId: Category.Id,
   title:      String,
   body:       String,
   state:      Status,
@@ -42,7 +42,7 @@ object Todo {
 
   // INSERT時のIDがAutoincrementのため,IDなしであることを示すオブジェクトに変換
   def apply(
-    categoryId: Long,
+    categoryId: Category.Id,
     title:      String,
     body:       String,
     state:      Status
@@ -61,7 +61,7 @@ object Todo {
   // EmbeddedIdインスタンスを生成するメソッド
   def build(
     id:         Id,
-    categoryId: Long,
+    categoryId: Category.Id,
     title:      String,
     body:       String,
     state:      Status
