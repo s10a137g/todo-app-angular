@@ -207,7 +207,7 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
           for {
             result <- TodoRepository.update(todo)
           } yield result match {
-            case Some(v) => Redirect("/todos/list")
+            case Some(v) => Redirect(controllers.todo.routes.TodoController.list)
             case _       => BadRequest(views.html.error.error(defaultVv))
           }
         }
@@ -218,7 +218,7 @@ class TodoController @Inject() (val controllerComponents: ControllerComponents)
     for {
       result <- TodoRepository.remove(Todo.Id(id))
     } yield result match {
-      case Some(v) => Redirect("/todos/list")
+      case Some(v) => Redirect(controllers.todo.routes.TodoController.list)
       case _       => BadRequest(views.html.error.error(defaultVv))
     }
   }
