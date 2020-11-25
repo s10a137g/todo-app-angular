@@ -224,15 +224,20 @@ class CategoryController @Inject() (
   }
 
   def delete(id: Long) = Action.async { implicit req =>
-    for {
-      result <- CategoryRepository.remove(Category.Id(id))
-    } yield result match {
-      case Some(v) =>
-        Redirect(controllers.category.routes.CategoryController.list)
-      case None    =>
+    (for {
+      categoryResult <- CategoryRepository.remove(Category.Id(id))
+      todoResult     <- TodoRepository.removeByCategoryId(Category.Id(id))
+    } yield {
+      Redirect(controllers.category.routes.CategoryController.list)
+    }) recover {
+      case e =>
         BadRequest(
           views.html.error.error(
-            ViewValueError("Category Add", Seq("main.css"), Seq("main.js"))
+            ViewValueError(
+              "Category Add",
+              Seq("main.css"),
+              Seq("main.js")
+            )
           )
         )
     }
