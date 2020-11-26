@@ -14,6 +14,9 @@ GET     /categories/list               controllers.category.CategoryController.l
 GET     /categories/insert             controllers.category.CategoryController.displayInsert
 GET     /categories/$id<[0-9]+>/update     controllers.category.CategoryController.displayUpdate(id: Long)
 GET     /categories/$id<[0-9]+>/delete     controllers.category.CategoryController.delete(id: Long)
+GET     /categories/$id<[0-9]+>/delete     controllers.category.CategoryController.delete(id: Long)
+
+GET     /api/get                   controllers.api.ApiController.get
 
 POST     /todos/insert                controllers.todo.TodoController.insert
 POST     /todos/update                controllers.todo.TodoController.update
