@@ -1,14 +1,24 @@
+<!--
+<h1>{{title}}</h1>
+<app-todos></app-todos>
+--> 
 <header class="header">
-  <div class="header__content"><span class="header__logo">To-do Sample</span></div>
+  <div class="header__content">
+    <span class="header__logo">To-do Sample</span>
+    <nav>
+      <a routerLink="/top">top</a>
+    </nav>
+  </div>
 </header>
 <main class="main">
   <h1>Home</h1>
-  <ul class='mdl-list'>
-    <li class="mdl-list__item"><a href="@controllers.todo.routes.TodoController.list">TODO List</a></li>
-    <li class="mdl-list__item"><a href="@controllers.category.routes.CategoryController.list">Category List</a></li>
-  </ul>
-  <div class="center">
-    {{content}}
-    <button (click)="onClick()">ボタン</button>
-  </div>
+  <router-outlet></router-outlet>
 </main>
+
+
+<!-- 念の為とっておく
+<div class="center">
+  {{content}}
+  <button (click)="onClick()">ボタン</button>
+</div>
+-->

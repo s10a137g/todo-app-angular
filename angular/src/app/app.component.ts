@@ -8,6 +8,7 @@ import { HttpClient } from '@angular/common/http';
 })
 
 export class AppComponent {
+  title = 'TEST' 
   content = 'はじめの第一歩';
   
   constructor(private http: HttpClient) {}
