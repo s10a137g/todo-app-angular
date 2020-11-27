@@ -17,6 +17,7 @@ GET     /categories/$id<[0-9]+>/delete     controllers.category.CategoryControll
 GET     /categories/$id<[0-9]+>/delete     controllers.category.CategoryController.delete(id: Long)
 
 GET     /api/get                   controllers.api.ApiController.get
+GET     /api/todos/get                   controllers.api.ApiController.todosGet
 
 POST     /todos/insert                controllers.todo.TodoController.insert
 POST     /todos/update                controllers.todo.TodoController.update

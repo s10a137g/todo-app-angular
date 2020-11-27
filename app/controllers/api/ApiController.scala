@@ -30,6 +30,8 @@ import play.api.data.validation.{Invalid, Valid, ValidationError}
 
 import play.api.libs.json.{JsNull,Json,JsString,JsValue}
 
+import model.todo.{ViewValueTodo, ViewValueTodoEdit, ViewValueTodoList}
+
 @Singleton
 class ApiController @Inject() (
   val controllerComponents: ControllerComponents
@@ -40,5 +42,34 @@ class ApiController @Inject() (
     val res: String = "レスポンスです！";
 
     Ok(Json.toJson(res));
+  }
+  
+  def todosGet = Action.async { implicit req => 
+    println("todosGet API Called")
+
+    for { 
+      todoList     <- TodoRepository.getAll()
+      categoryList <- CategoryRepository.getAll()
+    } yield {
+      val viewValueTodo = todoList.map(i =>
+        ViewValueTodo(
+          i.id.toLong,
+          i.v.title,
+          i.v.body,
+          i.v.state.name,
+          categoryList
+            .find(_.id.toLong == i.v.categoryId).map(_.v.name).getOrElse(""),
+          categoryList
+            .find(_.id.toLong == i.v.categoryId).map(_.v.color.name).getOrElse(
+              ""
+            )
+        )
+      )
+      
+      implicit val todoWrites = Json.writes[ViewValueTodo]
+      
+      Ok(Json.toJson(viewValueTodo))
+      
+    }
   }
 }

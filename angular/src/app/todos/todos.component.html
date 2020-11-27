@@ -1,7 +1,7 @@
 <p>todos works!</p>
 
 
-<button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@controllers.todo.routes.TodoController.displayInsert'">
+<button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='/todos/insert'">
   <span class="material-icons">add_circle</span>Add 
 </button>
 <table class="mdl-data-table mdl-js-data-table">
@@ -13,12 +13,11 @@
     <th class="mdl-data-table__cell--non-numeric">Update</th>
     <th class="mdl-data-table__cell--non-numeric">Delete</th>
   </tr>
-  <!--  @for(todo <- vv.todoList) { -->
-  <tr>
-    <td class="mdl-data-table__cell--non-numeric">title</td>
-    <td class="mdl-data-table__cell--non-numeric">body</td>
-    <td class="mdl-data-table__cell--non-numeric">statusName</td>
-    <td class="mdl-data-table__cell--non-numeric main__list--@todo.categoryColor">categoryName</td>
+  <tr *ngFor="let todo of todos">
+    <td class="mdl-data-table__cell--non-numeric">{{todo.title}}</td>
+    <td class="mdl-data-table__cell--non-numeric">{{todo.body}}</td>
+    <td class="mdl-data-table__cell--non-numeric">{{todo.statusName}}</td>
+    <td class="mdl-data-table__cell--non-numeric main__list--{{todo.categoryColor}}">{{todo.categoryName}}</td>
     <td class="mdl-data-table__cell--non-numeric" >
       <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@controllers.todo.routes.TodoController.displayUpdate(todo.id)'">
         <span class="material-icons">update</span>
@@ -30,8 +29,8 @@
       </button>
     </td>
   </tr>
-  <!--  } -->
 </table>
 <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@routes.HomeController.index'">
   <span class="material-icons">backspace</span> BACK
 </button>  
+

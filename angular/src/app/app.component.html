@@ -4,21 +4,16 @@
 --> 
 <header class="header">
   <div class="header__content">
-    <span class="header__logo">To-do Sample</span>
+    <span class="header__logo">To-do-Angular Sample</span>
     <nav>
-      <a routerLink="/top">top</a>
+      <a routerLink="/">top</a>
     </nav>
   </div>
 </header>
 <main class="main">
   <h1>Home</h1>
   <router-outlet></router-outlet>
+  <app-messages></app-messages>
 </main>
 
 
-<!-- 念の為とっておく
-<div class="center">
-  {{content}}
-  <button (click)="onClick()">ボタン</button>
-</div>
--->
