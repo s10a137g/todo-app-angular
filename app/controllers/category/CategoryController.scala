@@ -85,7 +85,7 @@ class CategoryController @Inject() (
       categoryList <- CategoryRepository.getAll()
     } yield {
       val viewValueCategory = categoryList.map(i =>
-        ViewValueCategory(i.id.toLong, i.v.name, i.v.slug, i.v.color)
+        ViewValueCategory(i.id.toLong, i.v.name, i.v.slug, i.v.color.code, i.v.color.name)
       )
       Ok(
         views.html.category.list(

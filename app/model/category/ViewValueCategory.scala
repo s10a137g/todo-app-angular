@@ -6,5 +6,6 @@ case class ViewValueCategory(
   id:    Long,
   name:  String,
   slug:  String,
-  color: Color
+  colorCode: Short, 
+  colorName: String
 )
