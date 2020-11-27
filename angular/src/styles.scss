@@ -138,9 +138,75 @@ app-top-bar h1 {
   background-color: #EEEEEE;
 }
 
+.main__list--RED {
+  background-color: #FF7D7D;
+}
 
-/*
-Copyright Google LLC. All Rights Reserved.
-Use of this source code is governed by an MIT-style license that
-can be found in the LICENSE file at http://angular.io/license
-*/
+.main__list--YELLOW {
+  background-color: #FFD580;
+}
+
+.main__list--GREEN {
+  background-color: #B3E284;
+}
+
+.main__list--WHITE {
+  background-color: #FFFFFF;
+}
+
+.main__list--SILVER {
+  background-color: #C0C0C0;
+}
+
+.main__list--GRAY {
+  background-color: #808080;
+}
+
+.main__list--BLACK {
+  background-color: #000000;
+  color: #DDDDDD;
+}
+
+.main__list--MAROON {
+  background-color: #800000;
+  color: #DDDDDD;
+}
+
+.main__list--OLIVE {
+  background-color: #808000;
+}
+
+.main__list--LIME {
+  background-color: #00FF00;
+}
+
+.main__list--AQUA {
+  background-color: #00FFFF;
+}
+
+.main__list--TEAL {
+  background-color: #008080;
+  color: #DDDDDD;
+}
+
+.main__list--BLUE {
+  background-color: #0000FF;
+  color: #DDDDDD;
+}
+
+.main__list--NAVY {
+  background-color: #000080;
+  color: #DDDDDD;
+}  
+
+.main__list--FUCHSIA {
+  background-color: #FF00FF;
+  color: #EEEEEE;
+}
+ 
+.main__list--PURPLE {
+  background-color: #800080;
+  color: #EEEEEE;
+}
+
+

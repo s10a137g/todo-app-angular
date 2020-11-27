@@ -1,4 +1,4 @@
-<form [formGroup]="insertForm">
+<form [formGroup]="insertForm"  (ngSubmit)="onTodoInsertSubmit(insertForm.value)">
    
   <div>
     <label for="title">
@@ -14,22 +14,25 @@
     <input id="body" type="text" formControlName="body">
   </div>
 
+<!--
   <div>
     <label for="statusName">
       Status
     </label>
-    <input id="statusName" type="text" formControlName="statusName">
+    <select id="statusName" type="text" formControlName="statusName" >
+      <option value="0">TODO(着手前)</option>
+      <option value="1">進行中</option>
+      <option value="2">完了</option>
+    </select>
   </div>
-
+-->
 
   <div>
-    <label for="categoryName">
+    <label for="category">
       Category
     </label>
-    <select id="categoryName" type="text" formControlName="categoryName">
-      <option value="Aries">おひつじ座</option>
-      <option value="Taurus">おうし座</option>
-      <option value="Gemini">ふたご座</option>
+    <select id="category" type="text" formControlName="category" >
+      <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
     </select>
   </div>
 

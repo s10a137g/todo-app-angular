@@ -8,6 +8,7 @@ import { AppComponent } from './app.component';
 import { TodosComponent } from './todos/todos.component';
 import { TopComponent } from './top/top.component';
 import { TodoInsertComponent } from './todo-insert/todo-insert.component';
+import { CategoriesComponent } from './categories/categories.component';
 import { MessagesComponent } from './messages/messages.component'; 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { MessagesComponent } from './messages/messages.component';
     TodosComponent,
     TopComponent,
     TodoInsertComponent,
+    CategoriesComponent,
     MessagesComponent
   ],
   imports: [

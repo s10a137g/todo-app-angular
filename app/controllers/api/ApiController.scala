@@ -32,6 +32,10 @@ import play.api.libs.json.{JsNull,Json,JsString,JsValue}
 
 import model.todo.{ViewValueTodo, ViewValueTodoEdit, ViewValueTodoList}
 
+import play.api.libs.json._
+import play.api.libs.json.Reads._
+import play.api.libs.functional.syntax._
+
 @Singleton
 class ApiController @Inject() (
   val controllerComponents: ControllerComponents
@@ -44,9 +48,7 @@ class ApiController @Inject() (
     Ok(Json.toJson(res));
   }
   
-  def todosGet = Action.async { implicit req => 
-    println("todosGet API Called")
-
+  def getTodos = Action.async { implicit req => 
     for { 
       todoList     <- TodoRepository.getAll()
       categoryList <- CategoryRepository.getAll()
@@ -72,4 +74,40 @@ class ApiController @Inject() (
       
     }
   }
+
+  def insertTodos = Action.async { implicit req => 
+    val jsonTodo = req.body.asJson.get.validate[JsonTodo].get
+
+    for {
+      result <- TodoRepository.add(Todo(Category.Id(jsonTodo.category.toLong), jsonTodo.title, jsonTodo.body, Todo.Status(0)))
+    } yield{
+      Ok(Json.toJson(req.toString))
+    }
+
+  }
+
+  def getCategories = Action.async {implicit req =>
+    for {
+      categoryList <- CategoryRepository.getAll()
+    } yield {
+       
+      val viewValueCategory = categoryList.map(i =>
+          ViewValueCategory(i.id.toLong, i.v.name, i.v.slug, i.v.color.code, i.v.color.name)
+      )
+      
+      implicit val categoryWrites = Json.writes[ViewValueCategory]
+
+      Ok(Json.toJson(viewValueCategory))
+    }
+  }
 }
+
+case class JsonTodo(title: String, body: String, category: String)
+
+object JsonTodo {
+    implicit val reads: Reads[JsonTodo] = (
+      (__ \ "title").read[String] and
+      (__ \ "body").read[String] and
+      (__ \ "category").read[String]
+    ) (JsonTodo.apply _)
+  }

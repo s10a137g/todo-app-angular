@@ -17,12 +17,15 @@ GET     /categories/$id<[0-9]+>/delete     controllers.category.CategoryControll
 GET     /categories/$id<[0-9]+>/delete     controllers.category.CategoryController.delete(id: Long)
 
 GET     /api/get                   controllers.api.ApiController.get
-GET     /api/todos/get                   controllers.api.ApiController.todosGet
+GET     /api/todos/get                   controllers.api.ApiController.getTodos
+GET     /api/categories/get              controllers.api.ApiController.getCategories
 
 POST     /todos/insert                controllers.todo.TodoController.insert
 POST     /todos/update                controllers.todo.TodoController.update
 
 POST     /category/insert             controllers.category.CategoryController.insert
 POST     /category/update             controllers.category.CategoryController.update
+
+POST     /api/todos/insert                   controllers.api.ApiController.insertTodos
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
