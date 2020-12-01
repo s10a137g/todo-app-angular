@@ -1,6 +1,6 @@
-<button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='/todos/insert'">
+<a class="mdl-button mdl-js-button mdl-js-ripple-effect" routerLink="/todos/insert">
   <span class="material-icons">add_circle</span>Add 
-</button>
+</a>
 <table class="mdl-data-table mdl-js-data-table">
   <tr>
     <th class="mdl-data-table__cell--non-numeric">Title</th>
@@ -16,14 +16,14 @@
     <td class="mdl-data-table__cell--non-numeric">{{todo.statusName}}</td>
     <td class="mdl-data-table__cell--non-numeric main__list--{{todo.categoryColor}}">{{todo.categoryName}}</td>
     <td class="mdl-data-table__cell--non-numeric" >
-      <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@controllers.todo.routes.TodoController.displayUpdate(todo.id)'">
+      <a class="mdl-button mdl-js-button mdl-js-ripple-effect" routerLink="/todos/update/{{ todo.id }}">
         <span class="material-icons">update</span>
-      </button>
+      </a>
     </td>
     <td class="mdl-data-table__cell--non-numeric" >
-      <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@controllers.todo.routes.TodoController.delete(todo.id)'">
+      <a class="mdl-button mdl-js-button mdl-js-ripple-effect" (click)="onTodoDeleteSubmit(todo.id)">
         <span class="material-icons">delete_forever</span>
-      </button>
+      </a>
     </td>
   </tr>
 </table>

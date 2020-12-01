@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
-import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { Todo} from '../todo'
@@ -22,13 +21,11 @@ export class TodoInsertComponent implements OnInit {
     private todoService: TodoService,
     private categoryService: CategoryService,
     private formBuilder: FormBuilder,
-    private location: Location,
     private router: Router,
   ) {
     this.insertForm = this.formBuilder.group({
       title: '',
       body: '',
-      // status: '',
       category: '',
     })
   }

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Todo } from '../todo';
 import { TodoService } from '../todo.service';
 import { MessageService } from '../message.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-todos',
@@ -15,8 +16,10 @@ export class TodosComponent implements OnInit {
 
   todos: Todo[];
 
-  constructor(private todoService: TodoService, private messageService: 
-             MessageService) { }
+  constructor(private todoService: TodoService, 
+              private messageService: MessageService,
+              private router: Router,
+             ){ }
   
   onSelect(todo: Todo): void {
     this.selectedTodo = todo;
@@ -29,5 +32,10 @@ export class TodosComponent implements OnInit {
 
   ngOnInit(): void {
     this.getTodos();
+  }
+
+  onTodoDeleteSubmit(id: number): void {
+    console.log(id)
+    this.todoService.deleteTodos(id).subscribe(() => this.router.navigate(['/todos/list']))
   }
 }

@@ -16,7 +16,8 @@ GET     /categories/$id<[0-9]+>/update     controllers.category.CategoryControll
 GET     /categories/$id<[0-9]+>/delete     controllers.category.CategoryController.delete(id: Long)
 GET     /categories/$id<[0-9]+>/delete     controllers.category.CategoryController.delete(id: Long)
 
-GET     /api/get                   controllers.api.ApiController.get
+GET     /api/get                         controllers.api.ApiController.get
+GET     /api/todo/get/$id<[0-9]+>        controllers.api.ApiController.getTodo(id: Long)
 GET     /api/todos/get                   controllers.api.ApiController.getTodos
 GET     /api/categories/get              controllers.api.ApiController.getCategories
 
@@ -26,6 +27,11 @@ POST     /todos/update                controllers.todo.TodoController.update
 POST     /category/insert             controllers.category.CategoryController.insert
 POST     /category/update             controllers.category.CategoryController.update
 
-POST     /api/todos/insert                   controllers.api.ApiController.insertTodos
+POST     /api/todos/insert            controllers.api.ApiController.insertTodos
+POST     /api/todos/update            controllers.api.ApiController.updateTodos
+
+DELETE   /api/todos/delete/$id<[0-9]+>     controllers.api.ApiController.deleteTodo(id: Long)
+DELETE   /api/category/delete/$id<[0-9]+>  controllers.api.ApiController.deleteCategory(id: Long)
+
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

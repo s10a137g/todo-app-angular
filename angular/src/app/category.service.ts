@@ -13,10 +13,15 @@ export class CategoryService {
   constructor(private http: HttpClient,
               private messageService: MessageService) { }
 
+  private categoryDeleteUrl = 'http://localhost:9000/api/category/delete';
   private categoriesGetUrl = 'http://localhost:9000/api/categories/get';
 
   getCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(this.categoriesGetUrl)  
-  }
+  } 
 
+  deleteCategory(id: number): Observable<Category> {
+    const url = `${this.categoryDeleteUrl}/${id}`;
+    return this.http.delete<Category>(url)  
+  }
 }

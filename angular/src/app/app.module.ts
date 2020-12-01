@@ -8,8 +8,9 @@ import { AppComponent } from './app.component';
 import { TodosComponent } from './todos/todos.component';
 import { TopComponent } from './top/top.component';
 import { TodoInsertComponent } from './todo-insert/todo-insert.component';
+import { TodoUpdateComponent } from './todo-update/todo-update.component';
 import { CategoriesComponent } from './categories/categories.component';
-import { MessagesComponent } from './messages/messages.component'; 
+import { MessagesComponent } from './messages/messages.component';
 
 @NgModule({
   declarations: [
@@ -17,8 +18,9 @@ import { MessagesComponent } from './messages/messages.component';
     TodosComponent,
     TopComponent,
     TodoInsertComponent,
+    TodoUpdateComponent,
     CategoriesComponent,
-    MessagesComponent
+    MessagesComponent,
   ],
   imports: [
     BrowserModule,

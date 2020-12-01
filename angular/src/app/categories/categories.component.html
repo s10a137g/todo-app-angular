@@ -20,13 +20,13 @@
         </button>
         </td>
         <td class="mdl-data-table__cell--non-numeric">
-          <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@controllers.category.routes.CategoryController.delete(category.id)'">
+          <a class="mdl-button mdl-js-button mdl-js-ripple-effect" (click)="onCategoryDeleteSubmit(category.id)">
             <span class="material-icons">delete_forever</span>
-          </button>
+          </a>
         </td>
       </tr>
   </table>
-  <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@routes.HomeController.index'">
+  <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='/'">
     <span class="material-icons">backspace</span> BACK
   </button>  
 

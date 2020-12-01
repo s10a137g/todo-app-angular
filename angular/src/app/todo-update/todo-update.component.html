@@ -1,0 +1,41 @@
+<ng-container *ngIf="todo">
+  <form [formGroup]="updateForm"  (ngSubmit)="onTodoUpdateSubmit(updateForm.value)">
+    <div>
+      <label for="title">
+        Title
+      </label>
+      <input id="title" type="text"  formControlName="title">
+    </div>
+
+    <div>
+      <label for="body">
+        Body
+      </label>
+      <input id="body" type="text" formControlName="body">
+    </div>
+
+    <div>
+      <label for="status">
+        Status
+      </label>
+      <select id="status" type="text" formControlName="status" >
+        <option value="0">TODO(着手前)</option>
+        <option value="1">進行中</option>
+        <option value="2">完了</option>
+      </select>
+    </div>
+
+    <div>
+      <label for="category">
+        Category
+      </label>
+      <select id="category" type="text" formControlName="category" >
+        <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+      </select>
+    </div>
+
+    <input type="hidden" formControlName="id">
+
+    <button class="button" type="submit">Update</button>
+  </form>
+</ng-container>
