@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 })
 
 export class TodosComponent implements OnInit {
-
+  title = ""
   selectedTodo: Todo;
 
   todos: Todo[];
@@ -20,6 +20,12 @@ export class TodosComponent implements OnInit {
               private messageService: MessageService,
               private router: Router,
              ){ }
+
+  ngOnInit(): void {
+    this.title = 'TODO List'
+    this.getTodos();
+  }
+
   
   onSelect(todo: Todo): void {
     this.selectedTodo = todo;
@@ -30,12 +36,7 @@ export class TodosComponent implements OnInit {
      this.todoService.getTodos().subscribe(todos => this.todos = todos);
   }
 
-  ngOnInit(): void {
-    this.getTodos();
-  }
-
   onTodoDeleteSubmit(id: number): void {
-    console.log(id)
     this.todoService.deleteTodos(id).subscribe(() => this.router.navigate(['/todos/list']))
   }
 }

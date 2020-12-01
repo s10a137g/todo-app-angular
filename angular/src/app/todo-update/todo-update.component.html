@@ -1,17 +1,19 @@
+<h1>TODO Update</h1>
 <ng-container *ngIf="todo">
   <form [formGroup]="updateForm"  (ngSubmit)="onTodoUpdateSubmit(updateForm.value)">
     <div>
       <label for="title">
         Title
       </label>
-      <input id="title" type="text"  formControlName="title">
+      <input id="title" type="text"  formControlName="title" size=30>
     </div>
 
     <div>
       <label for="body">
         Body
       </label>
-      <input id="body" type="text" formControlName="body">
+      <textarea id="body" type="text" formControlName="body" cols=50 rows=3>
+      </textarea>
     </div>
 
     <div>
@@ -30,12 +32,13 @@
         Category
       </label>
       <select id="category" type="text" formControlName="category" >
-        <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+        <option *ngFor="let category of categories"  [value]="category.id">{{ category.name }}</option>
       </select>
     </div>
 
     <input type="hidden" formControlName="id">
 
-    <button class="button" type="submit">Update</button>
+    <button class="button" type="submit">UPDATE</button>
   </form>
 </ng-container>
+<button class="button" onclick="location.href='/todos/list'">BACK</button>  

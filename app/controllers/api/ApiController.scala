@@ -42,11 +42,6 @@ class ApiController @Inject() (
   ) extends BaseController
      with I18nSupport {
 
-  def get = Action { implicit req => 
-    val res: String = "レスポンスです！";
-
-    Ok(Json.toJson(res));
-  }
   
   def getTodo(id: Long) = Action.async { implicit req => 
     for { 
@@ -54,20 +49,22 @@ class ApiController @Inject() (
       categoryList <- CategoryRepository.getAll()
     } yield maybeTodo match{
       case Some(todo) =>
-        val viewValueTodo = 
-          ViewValueTodo(
+        val jsonTodo = 
+          JsonTodo(
             todo.id.toLong,
             todo.v.title,
             todo.v.body,
+            todo.v.state.code,
             todo.v.state.name,
+            todo.v.categoryId,
             categoryList
               .find(_.id.toLong == todo.v.categoryId).map(_.v.name).getOrElse(""),
-            categoryList
-              .find(_.id.toLong == todo.v.categoryId).map(_.v.color.name).getOrElse("")
+              categoryList
+                .find(_.id.toLong == todo.v.categoryId).map(_.v.color.name).getOrElse("")
           )
         
-        implicit val todoWrites = Json.writes[ViewValueTodo]
-        Ok(Json.toJson(viewValueTodo))
+        implicit val todoWrites = Json.writes[JsonTodo]
+        Ok(Json.toJson(jsonTodo))
       
       case None => BadRequest("Bad")
     }
@@ -78,12 +75,14 @@ class ApiController @Inject() (
       todoList     <- TodoRepository.getAll()
       categoryList <- CategoryRepository.getAll()
     } yield {
-      val viewValueTodo = todoList.map(i =>
-        ViewValueTodo(
+      val jsonTodoList = todoList.map(i =>
+        JsonTodo(
           i.id.toLong,
           i.v.title,
           i.v.body,
+          i.v.state.code,
           i.v.state.name,
+          i.v.categoryId,
           categoryList
             .find(_.id.toLong == i.v.categoryId).map(_.v.name).getOrElse(""),
           categoryList
@@ -93,9 +92,8 @@ class ApiController @Inject() (
         )
       )
       
-      implicit val todoWrites = Json.writes[ViewValueTodo]
-      
-      Ok(Json.toJson(viewValueTodo))
+      implicit val todoWrites = Json.writes[JsonTodo]
+      Ok(Json.toJson(jsonTodoList))
       
     }
   }
@@ -140,6 +138,29 @@ class ApiController @Inject() (
     }
   }
 
+
+  def getCategory(id: Long) = Action.async { implicit req => 
+    for { 
+      maybeCategory         <- CategoryRepository.get(Category.Id(id))
+      categoryList <- CategoryRepository.getAll()
+    } yield maybeCategory match{
+      case Some(category) =>
+        val jsonCategory = 
+          JsonCategory(
+            category.id.toLong,
+            category.v.name,
+            category.v.slug,
+            category.v.color.code,
+            category.v.color.name
+          )
+        
+        implicit val todoWrites = Json.writes[JsonCategory]
+        Ok(Json.toJson(jsonCategory))
+      
+      case None => BadRequest("Bad")
+    }
+  }
+
   def getCategories = Action.async {implicit req =>
     for {
       categoryList <- CategoryRepository.getAll()
@@ -155,8 +176,36 @@ class ApiController @Inject() (
     }
   }
 
+  def insertCategory = Action.async { implicit req => 
+    val jsonInsertCategory = req.body.asJson.get.validate[JsonInsertCategory].get
+
+    for {
+      result <- CategoryRepository.add(Category(jsonInsertCategory.name, jsonInsertCategory.slug, Category.Color(jsonInsertCategory.color.toShort)))
+    } yield{
+      Ok(Json.toJson(req.toString))
+    }
+
+  }
+
+  def updateCategory = Action.async { implicit req => 
+    val jsonUpdateCategory = req.body.asJson.get.validate[JsonUpdateCategory].get
+
+    val category = Category.build(
+      Category.Id(jsonUpdateCategory.id.toLong),
+      jsonUpdateCategory.name,
+      jsonUpdateCategory.slug,
+      Category.Color(jsonUpdateCategory.color.toShort),
+    )
+
+    for {
+      result <- CategoryRepository.update(category)
+    } yield{
+      Ok(Json.toJson(req.toString))
+    }
+
+  }
+
   def deleteCategory(id: Long) = Action.async { implicit req =>
-    println(id)
     (for {
       categoryResult <- CategoryRepository.remove(Category.Id(id))
       todoResult     <- TodoRepository.removeByCategoryId(Category.Id(id))
@@ -169,7 +218,9 @@ class ApiController @Inject() (
   }
 }
 
+case class JsonTodo(id:Long, title: String, body: String, statusId: Long, statusName: String, categoryId: Long, categoryName: String, categoryColor: String)
 case class JsonInsertTodo(title: String, body: String, category: String)
+case class JsonUpdateTodo(id: Long, title: String, body: String, status: String, category: String)
 
 object JsonInsertTodo {
     implicit val reads: Reads[JsonInsertTodo] = (
@@ -179,14 +230,35 @@ object JsonInsertTodo {
     ) (JsonInsertTodo.apply _)
   }
 
-case class JsonUpdateTodo(id: String, title: String, body: String, status: String, category: String)
-
 object JsonUpdateTodo {
     implicit val reads: Reads[JsonUpdateTodo] = (
-      (__ \ "id").read[String] and
+      (__ \ "id").read[Long] and
       (__ \ "title").read[String] and
       (__ \ "body").read[String] and
       (__ \ "status").read[String] and
       (__ \ "category").read[String]
     ) (JsonUpdateTodo.apply _)
   }
+case class JsonCategory(id: Long, name: String, slug: String,colorCode:Long,  colorName: String)
+case class JsonInsertCategory(name: String, slug: String, color: String)
+case class JsonUpdateCategory(id: Long, name: String, slug: String, color: String)
+
+object JsonInsertCategory {
+    implicit val reads: Reads[JsonInsertCategory] = (
+      (__ \ "name").read[String] and
+      (__ \ "slug").read[String] and
+      (__ \ "color").read[String]
+    ) (JsonInsertCategory.apply _)
+  }
+
+
+object JsonUpdateCategory {
+    implicit val reads: Reads[JsonUpdateCategory] = (
+      (__ \ "id").read[Long] and
+      (__ \ "name").read[String] and
+      (__ \ "slug").read[String] and
+      (__ \ "color").read[String]
+    ) (JsonUpdateCategory.apply _)
+  }
+
+

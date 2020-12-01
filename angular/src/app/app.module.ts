@@ -11,6 +11,8 @@ import { TodoInsertComponent } from './todo-insert/todo-insert.component';
 import { TodoUpdateComponent } from './todo-update/todo-update.component';
 import { CategoriesComponent } from './categories/categories.component';
 import { MessagesComponent } from './messages/messages.component';
+import { CategoryInsertComponent } from './category-insert/category-insert.component';
+import { CategoryUpdateComponent } from './category-update/category-update.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +23,8 @@ import { MessagesComponent } from './messages/messages.component';
     TodoUpdateComponent,
     CategoriesComponent,
     MessagesComponent,
+    CategoryInsertComponent,
+    CategoryUpdateComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,31 +1,18 @@
+<h1>TODO Insert</h1>
 <form [formGroup]="insertForm"  (ngSubmit)="onTodoInsertSubmit(insertForm.value)">
-   
   <div>
     <label for="title">
       Title
     </label>
     <input id="title" type="text" formControlName="title">
   </div>
-  
+
   <div>
     <label for="body">
       Body
     </label>
     <input id="body" type="text" formControlName="body">
   </div>
-
-<!--
-  <div>
-    <label for="statusName">
-      Status
-    </label>
-    <select id="statusName" type="text" formControlName="statusName" >
-      <option value="0">TODO(着手前)</option>
-      <option value="1">進行中</option>
-      <option value="2">完了</option>
-    </select>
-  </div>
--->
 
   <div>
     <label for="category">
@@ -36,4 +23,7 @@
     </select>
   </div>
 
-  <button class="button" type="submit">Insert</button></form>
+  <button class="button" type="submit">INSERT</button>
+</form>
+
+<button class="button" onclick="location.href='/todos/list'">BACK</button>  

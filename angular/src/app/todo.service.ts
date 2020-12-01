@@ -24,13 +24,11 @@ export class TodoService {
   };
 
   getTodo(id: number): Observable<Todo> {
-    this.messageService.add("TodoService: ferched todo")
     const url = `${this.todoGetUrl}/${id}`;
     return this.http.get<Todo>(url)  
   }
 
   getTodos(): Observable<Todo[]> {
-    this.messageService.add("TodoService: ferched todos")
     return this.http.get<Todo[]>(this.todosGetUrl)  
   }
 

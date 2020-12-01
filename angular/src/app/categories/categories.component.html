@@ -1,32 +1,29 @@
-  <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@controllers.category.routes.CategoryController.displayInsert'">
-    <span class="material-icons">add_circle</span>Add 
-  </button>
+<h1>Category List</h1>
+<button class="button" onclick="location.href='/categories/insert'">NEW CATEGORY</button>  
 
-  <table class="mdl-data-table mdl-js-data-table">
-    <tr>
-      <th class="mdl-data-table__cell--non-numeric">Name</th>
-      <th class="mdl-data-table__cell--non-numeric">Slug</th>
-      <th class="mdl-data-table__cell--non-numeric">Color</th>
-      <th class="mdl-data-table__cell--non-numeric">Update</th>
-      <th class="mdl-data-table__cell--non-numeric">Delete</th>
-    </tr>
-      <tr class="main__cstegory-list" *ngFor="let category of categories">
-        <td class="mdl-data-table__cell--non-numeric">{{ category.name }}</td>
-        <td class="mdl-data-table__cell--non-numeric">{{ category.slug }}</td>
-        <td class="mdl-data-table__cell--non-numeric main__list--{{ category.colorName }}">{{ category.colorName }}</td>
-        <td class="mdl-data-table__cell--non-numeric">
-        <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='@controllers.category.routes.CategoryController.displayUpdate()'">
+<table class="mdl-data-table mdl-js-data-table">
+  <tr>
+    <th class="mdl-data-table__cell--non-numeric">Name</th>
+    <th class="mdl-data-table__cell--non-numeric">Slug</th>
+    <th class="mdl-data-table__cell--non-numeric">Color</th>
+    <th class="mdl-data-table__cell--non-numeric">Update</th>
+    <th class="mdl-data-table__cell--non-numeric">Delete</th>
+  </tr>
+  <tr class="main__cstegory-list" *ngFor="let category of categories">
+    <td class="mdl-data-table__cell--non-numeric">{{ category.name }}</td>
+    <td class="mdl-data-table__cell--non-numeric">{{ category.slug }}</td>
+    <td class="mdl-data-table__cell--non-numeric main__list--{{ category.colorName }}">{{ category.colorName }}</td>
+    <td class="mdl-data-table__cell--non-numeric">
+      <button class="mdl-button mdl-js-button mdl-js-ripple-effect" routerLink="/categories/update/{{ category.id }}">
         <span class="material-icons">update</span>
-        </button>
-        </td>
-        <td class="mdl-data-table__cell--non-numeric">
-          <a class="mdl-button mdl-js-button mdl-js-ripple-effect" (click)="onCategoryDeleteSubmit(category.id)">
-            <span class="material-icons">delete_forever</span>
-          </a>
-        </td>
-      </tr>
-  </table>
-  <button class="mdl-button mdl-js-button mdl-js-ripple-effect" onclick="location.href='/'">
-    <span class="material-icons">backspace</span> BACK
-  </button>  
+      </button>
+    </td>
+    <td class="mdl-data-table__cell--non-numeric">
+      <a class="mdl-button mdl-js-button mdl-js-ripple-effect" (click)="onCategoryDeleteSubmit(category.id)">
+        <span class="material-icons">delete_forever</span>
+      </a>
+    </td>
+  </tr>
+</table>
+<button class="button" onclick="location.href='/'">BACK</button>  
 

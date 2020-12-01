@@ -1,0 +1,44 @@
+<h1>Category Update</h1>
+<form [formGroup]="updateForm"  (ngSubmit)="onCategoryUpdateSubmit(updateForm.value)">
+  <div>
+    <label for="name">
+      Title
+    </label>
+    <input id="name" type="text" formControlName="name">
+  </div>
+
+  <div>
+    <label for="slug">
+      slug
+    </label>
+    <input id="slug" type="text" formControlName="slug">
+  </div>
+
+  <div>
+    <label for="color">
+      Color
+    </label>
+    <select id="color" type="text" formControlName="color" >
+      <option value="1">RED</option>
+      <option value="2">YELLOW</option>
+      <option value="3">GREEN</option>
+      <option value="4">WHITE</option>
+      <option value="5">SILVER</option>
+      <option value="6">GRAY</option>
+      <option value="7">BLACK</option>
+      <option value="8">MAROON</option>
+      <option value="9">OLIVE</option>
+      <option value="10">LIME</option>
+      <option value="11">AQUA</option>
+      <option value="12">TEAL</option>
+      <option value="13">BLUE</option>
+      <option value="14">NAVY</option>
+      <option value="15">FUCHSIA</option>
+      <option value="16">PURPLE</option>
+    </select>
+  </div>
+
+  <button class="button" type="submit">UPDATE</button>
+</form>
+
+<button class="button" onclick="location.href='/categories/list'">BACK</button>  

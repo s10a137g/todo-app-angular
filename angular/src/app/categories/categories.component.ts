@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Category } from '../category';
 import { CategoryService } from '../category.service';
-import { ActivatedRoute } from '@angular/router'; 
 import { Router } from '@angular/router';
 
 @Component({
@@ -23,7 +22,6 @@ export class CategoriesComponent implements OnInit {
     this.getCategories();
   }
   onCategoryDeleteSubmit(id: number): void {
-    console.log(id)
     this.categoryService.deleteCategory(id).subscribe(() => this.router.navigate(['/categories/list']))
   }
 

@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'todo-root',
@@ -8,16 +7,7 @@ import { HttpClient } from '@angular/common/http';
 })
 
 export class AppComponent {
-  title = 'TEST' 
-  content = 'はじめの第一歩';
+  content = 'TOP';
   
-  constructor(private http: HttpClient) {}
-  
-  onClick() {
-  this.http.get('http://localhost:9000/api/get').subscribe(
-    (res: string) => {
-      this.content = res;
-    }
-  );
-}
+  constructor  () {}
 }

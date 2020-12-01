@@ -1,12 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router'; 
-import { Todo} from '../todo'
-import { TodoService } from '../todo.service'
-import { CategoryService } from '../category.service'
-import { Category } from '../category'
-import { Observable } from 'rxjs';
+import {Component, OnInit} from '@angular/core';
+import {FormBuilder} from '@angular/forms';
+import {Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
+import {Todo} from '../todo'
+import {TodoService} from '../todo.service'
+import {CategoryService} from '../category.service'
+import {Category} from '../category'
+import {Observable} from 'rxjs';
 
 
 @Component({
@@ -15,8 +15,7 @@ import { Observable } from 'rxjs';
   styleUrls: ['./todo-update.component.scss']
 })
 export class TodoUpdateComponent implements OnInit {
-  todo: Todo; 
-  updateForm;
+  todo: Todo;
   categories: Category[];
 
   constructor(
@@ -25,18 +24,29 @@ export class TodoUpdateComponent implements OnInit {
     private formBuilder: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-  ){
-    this.updateForm = this.formBuilder.group({
-      id:  "",
-      title: "",
-      body: "",
-      status: "",
-      category: ""
-    })
+  ) {
   }
 
+  updateForm = this.formBuilder.group({
+    id: '', 
+    title: '',
+    body: '',
+    status: '',
+    category: ''
+  })
+
   ngOnInit(): void {
-    this.getTodo().subscribe(todo => this.todo = todo)// this.updateForm.controls['title'].setValue(todo.title));
+    this.getTodo().subscribe(todo => {
+      this.todo = todo;
+      this.updateForm.patchValue({
+        id: this.todo.id,
+        title: this.todo.title,
+        body: this.todo.body,
+        status: String(this.todo.statusId),
+        category: String(this.todo.categoryId),
+      })
+    });
+
     this.categoryService.getCategories().subscribe(categories => this.categories = categories)
   }
 
@@ -44,8 +54,8 @@ export class TodoUpdateComponent implements OnInit {
     this.todoService.updateTodos(tododata).subscribe(() => this.router.navigate(['/todos/list']))
   }
 
-  getTodo(): Observable<Todo>{
+  getTodo(): Observable<Todo> {
     const id = +this.route.snapshot.paramMap.get('id');
-    return this.todoService.getTodo(id)// .subscribe(todo => this.todo = todo)
+    return this.todoService.getTodo(id)
   }
 }
